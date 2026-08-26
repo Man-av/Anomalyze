@@ -1,5 +1,35 @@
+# dependencies
 node_modules/
-.env.local
+.pnp
+.pnp.*
+
+# next.js
+.next/
+out/
+build/
+
+# production
+dist/
+
+# testing
+coverage/
+
+# env — never commit secrets
+.env
 .env*.local
+
+# vercel
 .vercel
+
+# typescript
+next-env.d.ts
+*.tsbuildinfo
+
+# local claude settings
 .claude/
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-error.log*

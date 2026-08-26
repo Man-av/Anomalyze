@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/* Enable `dark:` utilities driven by the data-theme attribute on <html>. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---------------------------------------------------------------------------
+   Semantic design tokens. Light is the base in :root; [data-theme="dark"]
+   overrides. Layout defaults to dark (set on <html> in layout.tsx).
+   Data-encoding colors (categorical / sequential / diverging) are defined
+   separately and validated with the dataviz palette pass before charts land.
+--------------------------------------------------------------------------- */
+:root {
+  --background: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #eef0f4;
+  --surface-3: #e6e9ef;
+  --border: #e2e5ec;
+  --border-strong: #cfd4de;
+  --foreground: #14161c;
+  --muted: #545b6a;
+  --muted-2: #858c9b;
+
+  --accent: #5a54e0;
+  --accent-hover: #4a44cc;
+  --accent-soft: #ecebfb;
+  --accent-fg: #ffffff;
+
+  --ok: #129a6e;
+  --ok-soft: #dcf3ea;
+  --warn: #b7791f;
+  --warn-soft: #fbf0d9;
+  --danger: #d64550;
+  --danger-soft: #fbe3e5;
+  --info: #2a7fd0;
+  --info-soft: #e0eefb;
+
+  --ring: color-mix(in srgb, var(--accent) 55%, transparent);
+  --shadow-color: 220 25% 12%;
+}
+
+[data-theme="dark"] {
+  --background: #0a0b0f;
+  --surface: #13151b;
+  --surface-2: #191c24;
+  --surface-3: #21242e;
+  --border: #262a34;
+  --border-strong: #363c49;
+  --foreground: #e8eaf1;
+  --muted: #9aa1b1;
+  --muted-2: #6b7280;
+
+  --accent: #7c83ff;
+  --accent-hover: #949bff;
+  --accent-soft: #1c1e33;
+  --accent-fg: #0a0b0f;
+
+  --ok: #34d399;
+  --ok-soft: #10241d;
+  --warn: #f5b544;
+  --warn-soft: #2a2113;
+  --danger: #f2686f;
+  --danger-soft: #2a1518;
+  --info: #56b6f5;
+  --info-soft: #0f2231;
+
+  --ring: color-mix(in srgb, var(--accent) 60%, transparent);
+  --shadow-color: 240 60% 2%;
+}
+
+/* Map tokens to Tailwind theme so `bg-surface`, `text-muted`, etc. work and
+   respond to theme switches (the `inline` keyword keeps the var() reference). */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo",
+    "Consolas", monospace;
+
+  --radius-card: 14px;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Refined scrollbars (dark-first, unobtrusive) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+}
+
+/* Subtle radial glow used behind the hero. */
+.bg-hero-glow {
+  background:
+    radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 70%),
+    var(--background);
+}
