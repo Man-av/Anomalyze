@@ -6,13 +6,14 @@ import { fmtBytes, fmtInt } from "@/lib/format";
 import { useAnalyzer } from "./AnalyzerContext";
 import { AnomaliesPanel } from "./AnomaliesPanel";
 import { ColumnProfileTable } from "./ColumnProfileTable";
+import { Dashboard } from "./Dashboard";
 import { DataQualityPanel } from "./DataQualityPanel";
 import { KpiCards } from "./KpiCards";
 
 export function Results() {
   const { data, reset } = useAnalyzer();
   if (!data) return null;
-  const { profile, fileName, fileSize, truncated } = data;
+  const { profile, fileName, fileSize, truncated, rows } = data;
 
   const metaParts = [
     `${fmtInt(profile.rowCount)} rows`,
@@ -47,12 +48,16 @@ export function Results() {
 
       <KpiCards profile={profile} />
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8">
+        <Dashboard profile={profile} rows={rows} />
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <DataQualityPanel quality={profile.quality} />
         <AnomaliesPanel anomalies={profile.anomalies} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <ColumnProfileTable
           columns={profile.columns}
           {...(profile.datetimeIndex ? { datetimeIndex: profile.datetimeIndex } : {})}

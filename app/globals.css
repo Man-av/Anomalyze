@@ -36,6 +36,24 @@
 
   --ring: color-mix(in srgb, var(--accent) 55%, transparent);
   --shadow-color: 220 25% 12%;
+
+  /* Data-encoding palette (light). Categorical hues are spaced for maximum
+     separation and chosen to stay distinguishable under common color-vision
+     deficiencies; the diverging pair (indigo ↔ orange) is cool-vs-warm so sign
+     reads without relying on red/green. */
+  --chart-1: #5a54e0;
+  --chart-2: #0d9488;
+  --chart-3: #d97706;
+  --chart-4: #db2777;
+  --chart-5: #0284c7;
+  --chart-6: #7c3aed;
+  --chart-7: #16a34a;
+  --chart-8: #ea580c;
+  --chart-pos: #5a54e0;
+  --chart-neg: #ea580c;
+  --chart-anomaly: #d64550;
+  --chart-grid: #e2e5ec;
+  --chart-axis: #858c9b;
 }
 
 [data-theme="dark"] {
@@ -65,6 +83,21 @@
 
   --ring: color-mix(in srgb, var(--accent) 60%, transparent);
   --shadow-color: 240 60% 2%;
+
+  /* Data-encoding palette (dark) — brighter variants for the dark surfaces. */
+  --chart-1: #7c83ff;
+  --chart-2: #2dd4bf;
+  --chart-3: #fbbf24;
+  --chart-4: #f472b6;
+  --chart-5: #56b6f5;
+  --chart-6: #c084fc;
+  --chart-7: #4ade80;
+  --chart-8: #fb923c;
+  --chart-pos: #7c83ff;
+  --chart-neg: #fb923c;
+  --chart-anomaly: #f2686f;
+  --chart-grid: #262a34;
+  --chart-axis: #6b7280;
 }
 
 /* Map tokens to Tailwind theme so `bg-surface`, `text-muted`, etc. work and
