@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anomalyze — Upload data, get instant insights</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- CDN libraries — no install needed, browser just downloads these when the page loads -->
+  <!-- SheetJS: reads .xlsx files -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- PapaParse: reads .csv files -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- Chart.js: draws the charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>Anomalyze</h1>
+    <p class="tagline">Upload any dataset. Get instant stats, anomalies, and plain-English insights.</p>
+  </header>
+
+  <main>
+
+    <!-- Upload section -->
+    <section id="upload-section" class="card">
+      <label for="file-input" class="upload-label">
+        <span id="upload-text">Click to upload a .csv or .xlsx file</span>
+        <input type="file" id="file-input" accept=".csv,.xlsx,.xls" hidden />
+      </label>
+      <p class="hint">Your file is processed in your browser. Only summary statistics are sent to the server for the report below — the chatbot further down sends the full dataset only when you ask it a question.</p>
+    </section>
+
+    <!-- Loading state, hidden until a file is being processed -->
+    <section id="loading-section" class="card hidden">
+      <p>Analyzing your data...</p>
+    </section>
+
+    <!-- Error state, hidden until something goes wrong -->
+    <section id="error-section" class="card error hidden">
+      <p id="error-text"></p>
+    </section>
+
+    <!-- Results section, hidden until we have something to show -->
+    <section id="results-section" class="hidden">
+
+      <div class="card">
+        <h2>Dataset Report</h2>
+        <h3 class="report-label">What this data likely is</h3>
+        <p id="dataset-overview"></p>
+        <h3 class="report-label">Overall picture</h3>
+        <p id="stats-summary"></p>
+        <h3 class="report-label">What the anomalies suggest</h3>
+        <p id="anomaly-notes"></p>
+      </div>
+
+      <div class="card">
+        <h2>Anomalies Detected</h2>
+        <div id="anomalies-list"></div>
+      </div>
+
+      <div class="card">
+        <h2>Column Overview</h2>
+        <div id="stats-table-wrapper"></div>
+      </div>
+
+      <div class="card">
+        <h2>Dashboard</h2>
+        <div id="charts-grid" class="charts-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>Ask about your data</h2>
+        <p class="hint chat-hint">This sends your full dataset to the server to answer your question — unlike the report above, which only uses summary stats.</p>
+        <div id="chat-messages"></div>
+        <form id="chat-form">
+          <input type="text" id="chat-input" placeholder="e.g. Which row has the highest value?" autocomplete="off" />
+          <button type="submit">Ask</button>
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Built by Manav Sharma — <a href="https://github.com/man-av" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

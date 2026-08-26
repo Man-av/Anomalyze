@@ -1,0 +1,21 @@
+{
+  "columns": [
+    {
+      "name": "Revenue",
+      "mean": 1000,
+      "stdDev": 150,
+      "min": 700,
+      "max": 1400,
+      "latestValue": 1380
+    }
+  ],
+  "anomalies": [
+    {
+      "column": "Revenue",
+      "value": 1380,
+      "deviation": 2.5,
+      "direction": "up"
+    }
+  ],
+  "sampleSize": 30
+}
