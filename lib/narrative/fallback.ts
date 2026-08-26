@@ -8,6 +8,7 @@
  * no locale-dependent formatting).
  */
 
+import { fmtInt, fmtNum, fmtPct } from "@/lib/format";
 import type {
   CategoricalStats,
   DatasetProfile,
@@ -15,26 +16,6 @@ import type {
   NumericStats,
   Report,
 } from "@/lib/types";
-
-function fmtInt(n: number): string {
-  return Math.round(n)
-    .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function fmtNum(n: number): string {
-  if (!Number.isFinite(n)) return "n/a";
-  if (Number.isInteger(n)) return fmtInt(n);
-  const rounded = Math.round(n * 100) / 100;
-  const sign = rounded < 0 ? "-" : "";
-  const [intPart, decPart] = Math.abs(rounded).toString().split(".");
-  const withCommas = intPart!.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return decPart ? `${sign}${withCommas}.${decPart}` : `${sign}${withCommas}`;
-}
-
-function pct(x: number): string {
-  return `${(x * 100).toFixed(1)}%`;
-}
 
 /** "a" | "a and b" | "a, b, and c" */
 function joinList(items: string[]): string {
@@ -114,11 +95,11 @@ export function buildFallbackReport(profile: DatasetProfile): Report {
   const q = profile.quality;
   const qualityParts = [`Overall data-quality score: ${q.score}/100 (grade ${q.grade}).`];
   if (q.missingCellsPct > 0) {
-    qualityParts.push(`${pct(q.missingCellsPct)} of all cells are missing.`);
+    qualityParts.push(`${fmtPct(q.missingCellsPct)} of all cells are missing.`);
   }
   if (q.duplicateRows > 0) {
     qualityParts.push(
-      `${fmtInt(q.duplicateRows)} duplicate rows (${pct(q.duplicateRowsPct)}).`,
+      `${fmtInt(q.duplicateRows)} duplicate rows (${fmtPct(q.duplicateRowsPct)}).`,
     );
   }
   if (q.highNullColumns.length > 0) {
@@ -177,7 +158,7 @@ export function buildFallbackReport(profile: DatasetProfile): Report {
     );
   }
   if (q.missingCellsPct > 0.05) {
-    keyFindings.push(`Missing data is notable at ${pct(q.missingCellsPct)} of cells.`);
+    keyFindings.push(`Missing data is notable at ${fmtPct(q.missingCellsPct)} of cells.`);
   }
   const highCard = categorical.find((c) => c.highCardinality);
   if (highCard) {

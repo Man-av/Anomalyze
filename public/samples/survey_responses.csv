@@ -1,0 +1,121 @@
+respondent_id,age,gender,department,tenure_years,satisfaction,would_recommend,comments
+1001,45,Male,Marketing,4.7,1,false,
+1002,18,Male,Engineering,11.3,1,false,
+1003,27,Male,Marketing,3,3,true,Overall a great experience working in Marketing; would welcome more support here.
+1004,32,Non-binary,Support,,4,true,Overall a mixed experience working in Support; would welcome more support here.
+1005,30,Non-binary,Marketing,3.4,4,true,
+1006,,Male,Engineering,6.8,5,true,Overall a frustrating experience working in Engineering; would welcome more support here.
+1007,55,Male,Marketing,7.1,1,false,
+1008,42,Male,Marketing,10,3,true,
+1009,39,Female,Engineering,6.8,3,true,Overall a positive experience working in Engineering; would welcome more support here.
+1010,27,Female,HR,2.3,2,false,Overall a solid experience working in HR; would welcome more support here.
+1011,43,Female,HR,7.8,2,false,Overall a mixed experience working in HR; would appreciate more support here.
+1012,25,Prefer not to say,Marketing,5.3,3,true,
+1013,36,Female,Support,2.4,4,true,Overall a positive experience working in Support; would appreciate more support here.
+1014,45,Female,Support,4,2,false,
+1015,31,Male,HR,0,5,true,Overall a great experience working in HR; would appreciate more support here.
+1016,45,Female,Sales,0,4,true,Overall a mixed experience working in Sales; would appreciate more support here.
+1017,,Female,Sales,12,1,false,Overall a solid experience working in Sales; would welcome more support here.
+1018,64,Non-binary,Support,11.7,2,false,
+1019,31,Female,Engineering,5.9,2,false,Overall a great experience working in Engineering; would welcome more support here.
+1020,42,Male,Support,4.1,1,false,
+1021,,Non-binary,Sales,8.7,5,true,
+1022,,Female,HR,6,1,false,
+1023,39,Male,Sales,5.3,2,false,
+1024,33,Male,Sales,0,4,true,
+1025,,Prefer not to say,Sales,0,3,true,Overall a mixed experience working in Sales; would appreciate more support here.
+1026,51,Male,Engineering,,5,true,Overall a frustrating experience working in Engineering; would appreciate more support here.
+1027,25,Prefer not to say,Marketing,5.1,4,true,Overall a disappointing experience working in Marketing; would welcome more support here.
+1028,35,Female,HR,0.1,3,true,
+1029,38,Female,HR,0,5,true,Overall a disappointing experience working in HR; would appreciate more support here.
+1030,34,Male,Sales,8,4,true,Overall a excellent experience working in Sales; would welcome more support here.
+1031,33,Prefer not to say,Support,7.1,2,false,
+1032,55,Female,Sales,6,3,true,Overall a mixed experience working in Sales; would appreciate more support here.
+1033,43,Female,HR,4.1,4,true,
+1034,27,Prefer not to say,Marketing,0,4,true,Overall a frustrating experience working in Marketing; would appreciate more support here.
+1035,42,Prefer not to say,HR,10.1,2,false,
+1036,50,Female,Marketing,6.3,2,false,
+1037,20,Male,Sales,4.4,1,false,
+1038,29,Non-binary,Marketing,1.6,2,false,Overall a excellent experience working in Marketing; would appreciate more support here.
+1039,44,Male,Support,3.5,3,true,
+1040,,Female,HR,9,5,true,
+1041,20,Male,Support,7.6,3,true,
+1042,36,Female,Engineering,6.8,4,true,
+1043,38,Prefer not to say,Support,4.1,3,true,
+1044,35,Male,Engineering,0,3,true,Overall a mixed experience working in Engineering; would appreciate more support here.
+1045,,Male,HR,4.8,1,false,Overall a mixed experience working in HR; would appreciate more support here.
+1046,43,Female,HR,8,4,true,
+1047,35,Female,Engineering,0.5,4,true,
+1048,49,Male,HR,4.6,4,true,Overall a great experience working in HR; would appreciate more support here.
+1049,46,Female,Engineering,8.1,3,true,Overall a excellent experience working in Engineering; would welcome more support here.
+1050,31,Female,Support,0.7,3,true,
+1051,44,Male,Marketing,,5,true,
+1052,61,Female,Marketing,9.9,5,true,
+1053,40,Prefer not to say,Support,0.7,2,false,Overall a disappointing experience working in Support; would appreciate more support here.
+1054,,Male,HR,9,3,true,
+1055,43,Male,HR,6.9,4,true,
+1056,30,Female,HR,4.1,3,true,
+1057,41,Prefer not to say,Support,2.8,2,false,
+1058,31,Female,Support,6.1,5,true,
+1059,54,Non-binary,Engineering,4.4,5,true,
+1060,55,Female,Marketing,8.5,4,true,
+1061,44,Male,Marketing,6.5,5,true,
+1062,45,Non-binary,Sales,6.9,1,false,
+1063,31,Male,Support,8,5,true,Overall a great experience working in Support; would appreciate more support here.
+1064,,Male,Marketing,0.8,4,true,Overall a solid experience working in Marketing; would appreciate more support here.
+1065,38,Male,Engineering,10.4,3,true,
+1066,31,Female,Support,0,2,false,
+1067,,Prefer not to say,HR,7.4,1,false,Overall a solid experience working in HR; would welcome more support here.
+1068,28,Male,Sales,7.8,5,true,Overall a excellent experience working in Sales; would appreciate more support here.
+1069,49,Female,Support,0,3,true,Overall a mixed experience working in Support; would welcome more support here.
+1070,25,Female,Engineering,11.8,5,true,
+1071,19,Male,Marketing,7.4,4,true,Overall a disappointing experience working in Marketing; would welcome more support here.
+1072,41,Male,Marketing,8.4,1,false,
+1073,43,Prefer not to say,Engineering,6.5,4,true,Overall a disappointing experience working in Engineering; would welcome more support here.
+1074,50,Female,Support,9.5,5,true,
+1075,51,Male,Sales,0.5,4,true,
+1076,42,Male,Engineering,9.7,3,true,
+1077,22,Male,HR,14.9,1,false,Overall a great experience working in HR; would appreciate more support here.
+1078,38,Male,Marketing,7.2,4,true,
+1079,23,Non-binary,Marketing,1.7,2,false,
+1080,30,Male,Support,9.6,2,false,Overall a solid experience working in Support; would appreciate more support here.
+1081,53,Male,Engineering,5.3,3,true,
+1082,30,Male,HR,2.7,2,false,
+1083,30,Male,Engineering,11,1,false,
+1084,34,Male,Engineering,0,2,false,
+1085,28,Female,Engineering,6.7,3,true,
+1086,31,Non-binary,HR,7.4,2,false,
+1087,38,Female,HR,4.7,5,true,Overall a solid experience working in HR; would welcome more support here.
+1088,,Prefer not to say,Support,10.8,4,true,
+1089,39,Male,Marketing,11.1,3,true,
+1090,49,Female,Marketing,7.8,4,true,Overall a disappointing experience working in Marketing; would appreciate more support here.
+1091,18,Male,HR,8.3,5,true,
+1092,29,Prefer not to say,Support,4.2,1,false,
+1093,38,Prefer not to say,Support,8.1,3,true,
+1094,36,Prefer not to say,Sales,7.4,4,true,
+1095,40,Female,Sales,10.5,2,false,
+1096,26,Female,HR,7.5,2,false,
+1097,37,Male,HR,8.9,2,false,
+1098,58,Female,Engineering,6.9,4,true,Overall a positive experience working in Engineering; would welcome more support here.
+1099,28,Female,Marketing,12.1,5,true,Overall a mixed experience working in Marketing; would welcome more support here.
+1100,49,Non-binary,Sales,0,2,false,
+1101,48,Female,HR,3.7,3,true,
+1102,,Prefer not to say,Support,5.3,2,false,
+1103,39,Non-binary,Sales,6.7,1,false,
+1104,31,Non-binary,Sales,5.7,4,true,
+1105,35,Male,Support,10.4,5,true,
+1106,27,Non-binary,Marketing,2.2,3,true,
+1107,35,Non-binary,Marketing,5.8,2,false,
+1108,31,Prefer not to say,Support,8.7,5,true,Overall a mixed experience working in Support; would appreciate more support here.
+1109,33,Non-binary,HR,6,3,true,
+1110,29,Female,Support,6.3,2,false,
+1111,24,Female,Sales,7.8,4,true,
+1112,25,Female,Sales,2.1,1,false,Overall a solid experience working in Sales; would welcome more support here.
+1113,29,Prefer not to say,Support,10.3,1,false,
+1114,53,Non-binary,Support,9.6,4,true,Overall a great experience working in Support; would welcome more support here.
+1115,35,Male,HR,4.4,5,true,Overall a positive experience working in HR; would appreciate more support here.
+1116,28,Female,HR,0,3,true,
+1117,47,Female,HR,5.3,4,true,
+1118,38,Female,Sales,,1,false,Overall a great experience working in Sales; would appreciate more support here.
+1119,36,Prefer not to say,Sales,4.6,5,true,
+1120,49,Non-binary,Marketing,4.8,2,false,Overall a excellent experience working in Marketing; would appreciate more support here.
