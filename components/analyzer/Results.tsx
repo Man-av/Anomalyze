@@ -9,6 +9,7 @@ import { ColumnProfileTable } from "./ColumnProfileTable";
 import { Dashboard } from "./Dashboard";
 import { DataQualityPanel } from "./DataQualityPanel";
 import { KpiCards } from "./KpiCards";
+import { ReportPanel } from "./ReportPanel";
 
 export function Results() {
   const { data, reset } = useAnalyzer();
@@ -47,6 +48,10 @@ export function Results() {
       ) : null}
 
       <KpiCards profile={profile} />
+
+      <div className="mt-8">
+        <ReportPanel profile={profile} />
+      </div>
 
       <div className="mt-8">
         <Dashboard profile={profile} rows={rows} />
