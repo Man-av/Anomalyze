@@ -23,6 +23,7 @@ import { summarizeProfile } from "@/lib/analysis/summarize";
 import { hashObject } from "@/lib/hash";
 import { buildFallbackReport } from "@/lib/narrative/fallback";
 import type { DatasetProfile, Report } from "@/lib/types";
+import { useChatBridge } from "./chat/ChatBridge";
 
 interface InsightsResponse {
   report: Report | null;
@@ -61,6 +62,7 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
   const summary = useMemo(() => summarizeProfile(profile), [profile]);
   const hash = useMemo(() => hashObject(summary), [summary]);
   const fallback = useMemo(() => buildFallbackReport(profile), [profile]);
+  const bridge = useChatBridge();
 
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(true);
@@ -176,14 +178,25 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
                   Questions to explore
                 </h4>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {report.suggestedQuestions.map((q, i) => (
-                    <span
-                      key={i}
-                      className="rounded-full border border-border bg-surface-2 px-3 py-1 text-xs text-muted"
-                    >
-                      {q}
-                    </span>
-                  ))}
+                  {report.suggestedQuestions.map((q, i) =>
+                    bridge ? (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => bridge.ask(q)}
+                        className="rounded-full border border-border bg-surface-2 px-3 py-1 text-xs text-muted transition-colors hover:border-accent hover:bg-accent-soft hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                      >
+                        {q}
+                      </button>
+                    ) : (
+                      <span
+                        key={i}
+                        className="rounded-full border border-border bg-surface-2 px-3 py-1 text-xs text-muted"
+                      >
+                        {q}
+                      </span>
+                    ),
+                  )}
                 </div>
               </div>
             ) : null}

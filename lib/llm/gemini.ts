@@ -20,6 +20,12 @@ import {
   reportContentSchema,
   type ReportContent,
 } from "@/lib/llm/reportSchema";
+import {
+  CHAT_SYSTEM_PROMPT,
+  serializeGrounding,
+  type ChatMessage,
+  type GroundingContext,
+} from "@/lib/llm/grounding";
 import type { DatasetSummary } from "@/lib/analysis/summarize";
 
 /** Thrown when the model is unavailable for capacity/quota reasons. */
@@ -138,4 +144,146 @@ export async function generateReportContent(summary: DatasetSummary): Promise<Re
 
   // Unreachable in practice (loop returns/throws), but keeps types honest.
   throw new QuotaError(`Gemini unavailable (HTTP ${lastStatus})`);
+}
+
+// --- Streaming chat -------------------------------------------------------
+
+/** Wire an external abort signal into a fresh controller (for per-attempt use). */
+function linkAbort(signal: AbortSignal | undefined, controller: AbortController): () => void {
+  if (!signal) return () => {};
+  if (signal.aborted) {
+    controller.abort();
+    return () => {};
+  }
+  const onAbort = () => controller.abort();
+  signal.addEventListener("abort", onAbort, { once: true });
+  return () => signal.removeEventListener("abort", onAbort);
+}
+
+/**
+ * Stream a grounded chat answer as text deltas.
+ *
+ * Same failure philosophy as the report path: no key / FORCE_LLM_429 / a
+ * retryable status with no attempts left → QuotaError *before any text is
+ * yielded*, so the route can send one graceful message. Once bytes start
+ * flowing we no longer retry — a mid-stream break surfaces to the caller.
+ */
+export async function* streamChat(
+  messages: ChatMessage[],
+  grounding: GroundingContext,
+  signal?: AbortSignal,
+): AsyncGenerator<string, void, unknown> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (process.env.FORCE_LLM_429 === "1") {
+    throw new QuotaError("FORCE_LLM_429 set — forcing deterministic fallback");
+  }
+  if (!apiKey) {
+    throw new QuotaError("GEMINI_API_KEY is not configured");
+  }
+
+  const url = `${ENDPOINT}/${model()}:streamGenerateContent?alt=sse`;
+  const systemText = `${CHAT_SYSTEM_PROMPT}\n\n# DATASET CONTEXT\n${serializeGrounding(grounding)}`;
+  const contents = messages.map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.content }],
+  }));
+  const body = JSON.stringify({
+    systemInstruction: { parts: [{ text: systemText }] },
+    contents,
+    generationConfig: { temperature: 0.3, topP: 0.95, maxOutputTokens: 1536 },
+  });
+
+  let lastStatus = 0;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    const unlink = linkAbort(signal, controller);
+    const cleanup = () => {
+      clearTimeout(timer);
+      unlink();
+    };
+
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+        body,
+        signal: controller.signal,
+      });
+    } catch (e) {
+      cleanup();
+      if (attempt < MAX_ATTEMPTS) {
+        await sleep(BACKOFF_MS * attempt);
+        continue;
+      }
+      throw e instanceof Error ? e : new Error("Gemini request failed");
+    }
+
+    if (RETRYABLE.has(res.status)) {
+      cleanup();
+      lastStatus = res.status;
+      if (attempt < MAX_ATTEMPTS) {
+        await sleep(BACKOFF_MS * attempt);
+        continue;
+      }
+      throw new QuotaError(`Gemini unavailable (HTTP ${res.status})`);
+    }
+    if (!res.ok) {
+      cleanup();
+      throw new Error(`Gemini error (HTTP ${res.status})`);
+    }
+
+    // Good response — stream to completion. The timeout guards the whole
+    // stream; cleanup runs once the generator is fully drained or torn down.
+    try {
+      yield* readSseText(res);
+      return;
+    } finally {
+      cleanup();
+    }
+  }
+
+  throw new QuotaError(`Gemini unavailable (HTTP ${lastStatus})`);
+}
+
+/** Parse an `alt=sse` response, yielding the text delta of each event. */
+async function* readSseText(res: Response): AsyncGenerator<string, void, unknown> {
+  const stream = res.body;
+  if (!stream) throw new Error("Gemini returned no response body");
+  const reader = stream.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let nl: number;
+      while ((nl = buffer.indexOf("\n")) >= 0) {
+        const line = buffer.slice(0, nl).trim();
+        buffer = buffer.slice(nl + 1);
+        if (!line.startsWith("data:")) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+
+        let chunk: GeminiResponse;
+        try {
+          chunk = JSON.parse(payload) as GeminiResponse;
+        } catch {
+          continue; // ignore keep-alives / partial noise
+        }
+        if (chunk.promptFeedback?.blockReason) {
+          throw new Error(`Gemini blocked the prompt: ${chunk.promptFeedback.blockReason}`);
+        }
+        const parts = chunk.candidates?.[0]?.content?.parts;
+        const text = parts?.map((p) => p.text ?? "").join("") ?? "";
+        if (text) yield text;
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
 }
