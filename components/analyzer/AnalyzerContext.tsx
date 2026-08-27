@@ -7,8 +7,8 @@
  * call `analyzeFile` / `loadSample` / `reset` and read state.
  *
  * All analysis runs on the client — raw rows never leave the browser here.
- * (Heavy profiling is synchronous for now; a Web Worker is added in a later
- * phase for very large files.)
+ * Large datasets are profiled in a Web Worker (see WORKER_ROW_THRESHOLD) so the
+ * tab stays responsive; small ones stay synchronous to skip the worker overhead.
  */
 
 import {
@@ -19,6 +19,7 @@ import {
   useReducer,
   type ReactNode,
 } from "react";
+import { LIMITS } from "@/lib/config";
 import { profileDataset } from "@/lib/analysis/profile";
 import { parseCsv, parseFile } from "@/lib/parse/parseFile";
 import type { DatasetProfile, Row } from "@/lib/types";
@@ -82,6 +83,41 @@ const AnalyzerContext = createContext<AnalyzerContextValue | null>(null);
 /** Yield to the event loop so the loading UI paints before we block on profiling. */
 const yieldToPaint = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
+/**
+ * Profile off the main thread. Rejects if the worker is unavailable or errors,
+ * so callers can fall back to synchronous profiling.
+ * ponytail: one worker per call (construct + terminate); add a reuse pool only
+ * if profiling many files back-to-back ever shows up as a real cost.
+ */
+function profileInWorker(rows: Row[]): Promise<DatasetProfile> {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL("./profile.worker.ts", import.meta.url));
+    worker.onmessage = (e: MessageEvent<{ ok: boolean; profile?: DatasetProfile; error?: string }>) => {
+      worker.terminate();
+      if (e.data.ok && e.data.profile) resolve(e.data.profile);
+      else reject(new Error(e.data.error ?? "Profiling failed."));
+    };
+    worker.onerror = () => {
+      worker.terminate();
+      reject(new Error("The profiling worker failed."));
+    };
+    worker.postMessage({ rows });
+  });
+}
+
+/** Profile in a worker for large datasets; synchronous otherwise (and as a fallback). */
+async function profileRows(rows: Row[]): Promise<DatasetProfile> {
+  if (rows.length >= LIMITS.WORKER_ROW_THRESHOLD && typeof Worker !== "undefined") {
+    try {
+      return await profileInWorker(rows);
+    } catch {
+      // ponytail: sync fallback — a large file may briefly jank the tab, but the
+      // analysis always completes rather than dead-ending on a worker failure.
+    }
+  }
+  return profileDataset(rows);
+}
+
 function errorMessage(e: unknown): string {
   if (e instanceof Error) return e.message;
   return "Something went wrong while reading that file.";
@@ -98,7 +134,7 @@ export function AnalyzerProvider({ children }: { children: ReactNode }) {
       }
       dispatch({ type: "PROFILING" });
       await yieldToPaint();
-      const profile = profileDataset(rows);
+      const profile = await profileRows(rows);
       dispatch({
         type: "READY",
         data: { rows, profile, ...meta },

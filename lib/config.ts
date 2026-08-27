@@ -89,4 +89,6 @@ export const GROUNDING = {
 export const LIMITS = {
   MAX_ROWS: 200_000,
   MAX_BYTES: 25 * 1024 * 1024,
+  /** row counts at/above this profile in a Web Worker so the tab stays responsive */
+  WORKER_ROW_THRESHOLD: 20_000,
 } as const;

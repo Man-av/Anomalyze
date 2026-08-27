@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   },
 };
 
+// Runs before first paint to apply the saved (or system) theme, so there's no
+// flash of the default. `data-theme="dark"` on <html> is the no-JS fallback.
+const THEME_INIT = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: {
@@ -21,6 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body className="min-h-screen antialiased">{children}</body>
     </html>
   );

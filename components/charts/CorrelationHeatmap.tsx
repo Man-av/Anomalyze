@@ -27,11 +27,11 @@ export function CorrelationHeatmap({ spec }: { spec: HeatmapSpec }) {
 
   return (
     <ChartFrame title={spec.title} subtitle={spec.subtitle} fluid>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} aria-label="Correlation matrix">
         <table className="w-full border-collapse text-center text-xs">
           <thead>
             <tr>
-              <th className="p-1" />
+              <td className="p-1" />
               {cols.map((c) => (
                 <th
                   key={c}

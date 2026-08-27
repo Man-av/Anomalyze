@@ -44,7 +44,7 @@ export function ColumnProfileTable({
         subtitle={`${fmtInt(columns.length)} columns, typed and summarized`}
       />
       <CardBody className="px-0 py-0">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0} aria-label="Column profiles">
           <table className="w-full text-sm">
             <thead className="bg-surface-2 text-left text-xs text-muted-2">
               <tr>

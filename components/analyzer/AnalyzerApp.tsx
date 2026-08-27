@@ -1,6 +1,7 @@
 "use client";
 
 import { LogoMark } from "@/components/icons";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useAnalyzer } from "./AnalyzerContext";
 import { LandingHero } from "./LandingHero";
 import { Results } from "./Results";
@@ -12,15 +13,16 @@ function AppHeader() {
         <LogoMark />
         <span className="text-[15px] font-semibold tracking-tight">Anomalyze</span>
       </div>
-      <nav className="flex items-center gap-6 text-sm text-muted">
+      <nav className="flex items-center gap-4 text-sm text-muted">
         <a
           href="https://github.com/man-av"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-colors hover:text-foreground"
+          className="text-muted hover:text-foreground"
         >
           GitHub
         </a>
+        <ThemeToggle />
       </nav>
     </header>
   );
@@ -36,7 +38,7 @@ function AppFooter() {
             href="https://github.com/man-av"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-accent hover:text-accent-hover"
+            className="text-accent underline underline-offset-2 hover:text-accent-hover"
           >
             @man-av
           </a>

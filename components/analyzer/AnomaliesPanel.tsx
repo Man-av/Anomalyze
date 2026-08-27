@@ -38,7 +38,7 @@ export function AnomaliesPanel({ anomalies }: { anomalies: Anomaly[] }) {
         />
       ) : (
         <CardBody className="px-0 py-0">
-          <div className="max-h-[22rem] overflow-auto">
+          <div className="max-h-[22rem] overflow-auto" tabIndex={0} aria-label="Flagged anomalies">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-surface-2 text-left text-xs text-muted-2">
                 <tr>

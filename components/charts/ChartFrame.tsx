@@ -63,7 +63,9 @@ export function ChartFrame({
       <CardBody className="pt-3">
         <div id={panelId}>
           {showTable ? (
-            <div className="max-h-[300px] overflow-auto">{table}</div>
+            <div className="max-h-[300px] overflow-auto" tabIndex={0} aria-label={`${title} data table`}>
+              {table}
+            </div>
           ) : (
             <>
               {fluid ? (

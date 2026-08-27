@@ -56,7 +56,7 @@ export function MessageList({
   }
 
   return (
-    <div className="max-h-[28rem] space-y-3 overflow-y-auto pr-1">
+    <div className="max-h-[28rem] space-y-3 overflow-y-auto pr-1" tabIndex={0} aria-label="Conversation">
       {messages.map((m) => (
         <MessageBubble key={m.id} role={m.role} content={m.content} streaming={busy} />
       ))}
