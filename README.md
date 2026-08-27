@@ -8,7 +8,7 @@ Everything that matters is computed **deterministically in your browser**. The
 AI layer is an *enhancement, never a dependency* — the whole product works with
 zero LLM quota.
 
-**Live demo:** _deployed on Vercel — link added after promotion_
+**Live demo:** **[anomalyze-khaki.vercel.app](https://anomalyze-khaki.vercel.app)**
 
 > **Stack:** Next.js 16 (App Router) · React 19 · TypeScript 6 (strict) ·
 > Tailwind CSS v4 · Recharts · Gemini (free tier) · Vitest
