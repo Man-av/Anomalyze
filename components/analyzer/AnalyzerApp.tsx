@@ -1,6 +1,6 @@
 "use client";
 
-import { LogoMark } from "@/components/icons";
+
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useAnalyzer } from "./AnalyzerContext";
 import { LandingHero } from "./LandingHero";
@@ -9,13 +9,21 @@ import { Results } from "./Results";
 function AppHeader() {
   return (
     <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-      <div className="flex items-center gap-2.5">
-        <LogoMark />
-        <span className="text-[15px] font-semibold tracking-tight">Anomalyze</span>
+      <div className="flex items-center">
+        <span
+          style={{
+            fontFamily: "'GoingToDoGreatThings', cursive",
+            fontWeight: 900,
+            fontSize: "1.8rem",
+          }}
+          className="text-accent"
+        >
+          Anomalyze
+        </span>
       </div>
       <nav className="flex items-center gap-4 text-sm text-muted">
         <a
-          href="https://github.com/man-av"
+          href="https://github.com/Man-av/Anomalyze"
           target="_blank"
           rel="noopener noreferrer"
           className="text-muted hover:text-foreground"

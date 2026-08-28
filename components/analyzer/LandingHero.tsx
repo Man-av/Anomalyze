@@ -99,17 +99,33 @@ function DropArea() {
 export function LandingHero() {
   return (
     <main className="mx-auto max-w-6xl px-6">
+      {/* ── Hero ── */}
       <section className="grid items-center gap-10 pt-16 pb-14 sm:pt-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
         <div className="text-center lg:text-left">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 text-xs text-muted backdrop-blur lg:mx-0">
-            <span className="h-1.5 w-1.5 rounded-full bg-ok" />
-            Analyzed in your browser — your data never leaves your device for the report
+          {/* Hallmark eyebrow: dot + monospace category label */}
+          <div className="mx-auto mb-5 flex items-center justify-center gap-2 lg:mx-0 lg:justify-start">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden />
+            <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
+              Anomaly Detection · In-browser
+            </span>
           </div>
-          <h1 className="font-heading mx-auto mt-5 max-w-xl text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:mx-0">
+
+          <h1 className="font-heading mx-auto max-w-xl text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:mx-0">
             Every dataset has a point that doesn&rsquo;t belong.
             <br />
-            <span className="text-accent">Anomalyze finds it.</span>
+            <span
+              style={{
+                fontFamily: "'GoingToDoGreatThings', cursive",
+                fontWeight: 400,
+                fontSize: "1.8em",
+              }}
+              className="text-accent"
+            >
+              Anomalyze
+            </span>
+            <span className="text-accent"> finds it.</span>
           </h1>
+
           <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted sm:text-lg lg:mx-0">
             Drop in a CSV or Excel file. Anomalyze profiles every column, flags
             real outliers with MAD &amp; IQR &mdash; not a fooled-by-its-own-outliers
@@ -118,6 +134,7 @@ export function LandingHero() {
           </p>
         </div>
 
+        {/* Sparkline hero art */}
         <div className="rounded-[var(--radius-card)] border border-border bg-surface p-4 shadow-[0_1px_0_var(--border)]">
           <div className="mb-2 flex items-center justify-between px-1">
             <span className="font-mono text-[11px] uppercase tracking-wide text-muted-2">
@@ -129,50 +146,68 @@ export function LandingHero() {
         </div>
       </section>
 
-      <section className="pb-10">
+      {/* ── 01 / Upload ── */}
+      <section className="pb-12">
+        <div className="mb-6 flex items-center gap-3">
+          <span className="font-mono text-sm font-semibold text-accent">01</span>
+          <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted-2">/&nbsp;&nbsp;Upload your data</span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
         <div className="mx-auto max-w-xl">
           <DropArea />
         </div>
+        <p className="mt-4 text-center font-mono text-[11px] text-muted-2">
+          CSV &nbsp;·&nbsp; Excel (.xlsx / .xls) &nbsp;·&nbsp; analyzed entirely in your browser
+        </p>
       </section>
 
-      <section className="grid gap-4 pb-24 md:grid-cols-3 md:grid-rows-2">
-        <div className="rounded-[var(--radius-card)] border border-border bg-surface p-6 md:col-span-2 md:row-span-2">
-          <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
-            <ChartIcon />
-          </div>
-          <h3 className="font-heading text-base font-semibold">Auto dashboard</h3>
-          <p className="mt-1.5 max-w-md text-sm leading-relaxed text-muted">
-            Histograms, time series, correlations — the right chart is ranked
-            and chosen per column type, not forced. A categorical column never
-            gets stuffed into a line chart just because it was easy.
-          </p>
-          <div className="mt-6 flex items-end gap-1.5" aria-hidden>
-            {[38, 62, 44, 80, 52, 70, 30, 58, 90, 46].map((h, i) => (
-              <div
-                key={i}
-                className="w-full rounded-t-sm"
-                style={{
-                  height: `${h}px`,
-                  background: i === 8 ? "var(--chart-anomaly)" : "var(--chart-1)",
-                  opacity: i === 8 ? 1 : 0.55,
-                }}
-              />
-            ))}
-          </div>
+      {/* ── 02 / What it does ── */}
+      <section className="pb-24">
+        <div className="mb-6 flex items-center gap-3">
+          <span className="font-mono text-sm font-semibold text-accent">02</span>
+          <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted-2">/&nbsp;&nbsp;What it does</span>
+          <div className="h-px flex-1 bg-border" />
         </div>
 
-        {SIDE_FEATURES.filter((f) => f.title !== "Auto dashboard").map((f) => (
-          <div
-            key={f.title}
-            className="rounded-[var(--radius-card)] border border-border bg-surface p-5"
-          >
-            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
-              {f.icon}
+        <div className="grid gap-4 md:grid-cols-3 md:grid-rows-2">
+          <div className="rounded-[var(--radius-card)] border border-border bg-surface p-6 md:col-span-2 md:row-span-2">
+            <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
+              <ChartIcon />
             </div>
-            <h3 className="font-heading text-sm font-semibold">{f.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">{f.body}</p>
+            <h3 className="font-heading text-base font-semibold">Auto dashboard</h3>
+            <p className="mt-1.5 max-w-md text-sm leading-relaxed text-muted">
+              Histograms, time series, correlations — the right chart is ranked
+              and chosen per column type, not forced. A categorical column never
+              gets stuffed into a line chart just because it was easy.
+            </p>
+            <div className="mt-6 flex items-end gap-1.5" aria-hidden>
+              {[38, 62, 44, 80, 52, 70, 30, 58, 90, 46].map((h, i) => (
+                <div
+                  key={i}
+                  className="w-full rounded-t-sm"
+                  style={{
+                    height: `${h}px`,
+                    background: i === 8 ? "var(--chart-anomaly)" : "var(--chart-1)",
+                    opacity: i === 8 ? 1 : 0.55,
+                  }}
+                />
+              ))}
+            </div>
           </div>
-        ))}
+
+          {SIDE_FEATURES.filter((f) => f.title !== "Auto dashboard").map((f) => (
+            <div
+              key={f.title}
+              className="rounded-[var(--radius-card)] border border-border bg-surface p-5"
+            >
+              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                {f.icon}
+              </div>
+              <h3 className="font-heading text-sm font-semibold">{f.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted">{f.body}</p>
+            </div>
+          ))}
+        </div>
       </section>
     </main>
   );
