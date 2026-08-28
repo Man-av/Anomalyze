@@ -49,7 +49,7 @@ export function CardHeader({
           </span>
         ) : null}
         <div>
-          <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
+          <h2 className="font-heading text-sm font-semibold tracking-tight">{title}</h2>
           {subtitle ? <p className="mt-0.5 text-xs text-muted">{subtitle}</p> : null}
         </div>
       </div>

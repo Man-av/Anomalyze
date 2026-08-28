@@ -33,7 +33,7 @@ export function Results() {
               <DocIcon size={20} />
             </span>
             <div>
-              <h1 className="text-lg font-semibold tracking-tight">{fileName}</h1>
+              <h1 className="font-heading text-lg font-semibold tracking-tight">{fileName}</h1>
               <p className="text-xs text-muted-2">{metaParts.join(" · ")}</p>
             </div>
           </div>
@@ -64,7 +64,7 @@ export function Results() {
           <Chat profile={profile} rows={rows} />
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
           <DataQualityPanel quality={profile.quality} />
           <AnomaliesPanel anomalies={profile.anomalies} />
         </div>
