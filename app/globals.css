@@ -9,6 +9,15 @@
 @import "tailwindcss";
 @import "./tokens.css";
 
+@font-face {
+  font-family: "GoingToDoGreatThings";
+  src: url("/fonts/GoingToDoGreatThings.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 /* Enable `dark:` utilities driven by the data-theme attribute on <html>. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 

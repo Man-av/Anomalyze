@@ -37,7 +37,10 @@ function AppHeader() {
   return (
     <header className="sticky top-0 z-[var(--z-sticky)] border-b border-border bg-background">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
-        <span className="shrink-0 font-heading text-lede leading-head font-bold tracking-tight text-foreground">
+        <span
+          style={{ fontFamily: "'GoingToDoGreatThings', cursive", fontWeight: 900, fontSize: "1.6rem" }}
+          className="shrink-0 text-accent"
+        >
           Anomalyze
         </span>
 
