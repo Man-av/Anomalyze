@@ -38,7 +38,7 @@ function AppHeader() {
     <header className="sticky top-0 z-[var(--z-sticky)] border-b border-border bg-background">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
         <span
-          style={{ fontFamily: "'GoingToDoGreatThings', cursive", fontWeight: 900, fontSize: "1.6rem" }}
+          style={{ fontFamily: "'GoingToDoGreatThings', cursive", fontWeight: 400, fontSize: "1.6rem", WebkitTextStroke: "0.5px currentColor" }}
           className="shrink-0 text-accent"
         >
           Anomalyze

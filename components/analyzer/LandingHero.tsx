@@ -124,8 +124,9 @@ export function LandingHero() {
             <span
               style={{
                 fontFamily: "'GoingToDoGreatThings', cursive",
-                fontWeight: 0,
+                fontWeight: 400,
                 fontSize: "1.7em",
+                WebkitTextStroke: "0.6px currentColor",
               }}
               className="text-accent"
             >
