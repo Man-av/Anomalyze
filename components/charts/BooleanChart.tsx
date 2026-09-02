@@ -35,14 +35,14 @@ export function BooleanChart({ spec }: { spec: BooleanSpec }) {
   return (
     <ChartFrame title={spec.title} subtitle={spec.subtitle} height={150}>
       <div className="flex h-full flex-col justify-center gap-4">
-        <div className="flex h-8 w-full overflow-hidden rounded-lg border border-border">
+        <div className="flex h-8 w-full overflow-hidden rounded-md border border-border">
           <div
-            className="h-full transition-all"
+            className="h-full transition-[width] duration-[var(--dur-long)] ease-out"
             style={{ width: `${truePct * 100}%`, background: "var(--chart-1)" }}
             title={`true: ${fmtPct(truePct)}`}
           />
           <div
-            className="h-full flex-1 transition-all"
+            className="h-full flex-1"
             style={{ background: "var(--chart-3)" }}
             title={`false: ${fmtPct(1 - truePct)}`}
           />

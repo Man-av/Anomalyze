@@ -4,6 +4,11 @@ import { fmtInt } from "@/lib/format";
 import type { DatasetProfile } from "@/lib/types";
 import { gradeTone } from "./typeMeta";
 
+/**
+ * Figures in the display face, labels in sentence case. The labels used to be
+ * uppercase and letter-spaced, which is the dashboard-template micro-label; a
+ * plain label lets the number be the loud thing, which is the point of a KPI.
+ */
 function KpiTile({
   label,
   value,
@@ -14,12 +19,10 @@ function KpiTile({
   sub?: ReactNode;
 }) {
   return (
-    <div className="rounded-[var(--radius-card)] border border-border bg-surface p-4">
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-2">
-        {label}
-      </p>
+    <div className="rounded-panel border border-border bg-surface p-4">
+      <p className="text-xs text-muted">{label}</p>
       <div className="mt-1.5 flex items-baseline gap-2">
-        <span className="text-2xl font-semibold tabular-nums tracking-tight">
+        <span className="font-heading text-2xl font-semibold tabular-nums tracking-tight">
           {value}
         </span>
         {sub ? <span className="text-xs text-muted-2">{sub}</span> : null}
@@ -48,20 +51,16 @@ export function KpiCards({ profile }: { profile: DatasetProfile }) {
         value={fmtInt(anomalyCount)}
         sub={anomalyCount > 0 ? "flagged" : "none"}
       />
-      <div className="rounded-[var(--radius-card)] border border-border bg-surface p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-2">
-          Quality
-        </p>
-        <div className="mt-1.5 flex items-baseline gap-2">
-          <span className="text-2xl font-semibold tabular-nums tracking-tight">
-            {q.score}
+      <KpiTile
+        label="Quality"
+        value={q.score}
+        sub={
+          <span className="flex items-center gap-2">
+            / 100
+            <Badge tone={gradeTone(q.grade)}>{q.grade}</Badge>
           </span>
-          <span className="text-xs text-muted-2">/ 100</span>
-          <Badge tone={gradeTone(q.grade)} className="ml-auto">
-            {q.grade}
-          </Badge>
-        </div>
-      </div>
+        }
+      />
     </div>
   );
 }

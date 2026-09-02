@@ -43,7 +43,8 @@ export function ChatInput({
   };
 
   return (
-    <div className="flex items-end gap-2 rounded-xl border border-border bg-surface-2 px-3 py-2 focus-within:ring-2 focus-within:ring-[var(--ring)]">
+    // The textarea is borderless, so the wrapper carries the focus indicator.
+    <div className="flex items-end gap-2 rounded-panel border border-border bg-surface-2 px-3 py-2 focus-within:border-border-strong focus-within:ring-2 focus-within:ring-ring">
       <textarea
         ref={taRef}
         rows={1}
@@ -61,7 +62,7 @@ export function ChatInput({
           type="button"
           onClick={onStop}
           aria-label="Stop generating"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-3 text-muted transition-colors hover:text-foreground"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-surface-3 text-muted transition-colors duration-[var(--dur-micro)] ease-out hover:text-foreground"
         >
           <Spinner size={14} />
         </button>
@@ -71,7 +72,7 @@ export function ChatInput({
           onClick={submit}
           disabled={!value.trim()}
           aria-label="Send message"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-fg transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent text-accent-fg transition-colors duration-[var(--dur-micro)] ease-out enabled:hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ArrowUpIcon size={16} />
         </button>

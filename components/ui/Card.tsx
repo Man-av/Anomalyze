@@ -1,7 +1,11 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-/** Surface container with the shared card radius and border. */
+/**
+ * Surface container: hairline border, tight instrument radius, no shadow.
+ * The dashboard's rail anchors are wrapper divs in Results, so the id and the
+ * scroll margin live there — a panel doesn't need to know it's a link target.
+ */
 export function Card({
   className,
   children,
@@ -11,17 +15,21 @@ export function Card({
 }) {
   return (
     <section
-      className={cn(
-        "overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface",
-        className,
-      )}
+      className={cn("overflow-hidden rounded-panel border border-border bg-surface", className)}
     >
       {children}
     </section>
   );
 }
 
-/** Section header: optional icon chip, title, subtitle, and right-aligned actions. */
+/**
+ * Section header: optional icon, title, subtitle, and right-aligned actions.
+ *
+ * The icon used to sit in an `bg-accent-soft` rounded square. That motif is the
+ * icon-in-coloured-tile card, and repeating it across seven panels spent the
+ * entire accent budget on decoration. The glyph now renders bare in `--muted`:
+ * it orients, it doesn't shout, and the accent stays available for state.
+ */
 export function CardHeader({
   icon,
   title,
@@ -42,15 +50,19 @@ export function CardHeader({
         className,
       )}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2.5">
         {icon ? (
-          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+          <span className="mt-0.5 shrink-0 text-muted-2" aria-hidden="true">
             {icon}
           </span>
         ) : null}
-        <div>
-          <h2 className="font-heading text-sm font-semibold tracking-tight">{title}</h2>
-          {subtitle ? <p className="mt-0.5 text-xs text-muted">{subtitle}</p> : null}
+        <div className="min-w-0">
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {title}
+          </h2>
+          {subtitle ? (
+            <p className="mt-0.5 text-xs text-muted">{subtitle}</p>
+          ) : null}
         </div>
       </div>
       {actions ? (

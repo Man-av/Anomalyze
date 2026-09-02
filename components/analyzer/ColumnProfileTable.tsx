@@ -76,10 +76,10 @@ export function ColumnProfileTable({
                     <td className="px-3 py-2.5">
                       <Badge tone={meta.tone}>{meta.label}</Badge>
                     </td>
-                    <td className="px-3 py-2.5 text-right tabular-nums text-muted">
+                    <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted">
                       {col.missing > 0 ? fmtPct(col.missingPct) : "—"}
                     </td>
-                    <td className="px-3 py-2.5 text-right tabular-nums text-muted">
+                    <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted">
                       {fmtInt(col.unique)}
                     </td>
                     <td className="px-5 py-2.5 text-muted">{columnSummary(col)}</td>

@@ -25,8 +25,11 @@ function svgProps(size: number, className?: string) {
 
 export function LogoMark() {
   return (
-    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-accent-fg">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+    // The glyph is the product's subject, so it carries the accent directly.
+    // It used to sit reversed inside an accent-filled rounded square, which is
+    // the generic app-icon mark and spent the accent budget on chrome.
+    <span className="flex shrink-0 items-center text-accent">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
           d="M3 17l5-6 4 4 5-8 4 6"
           stroke="currentColor"

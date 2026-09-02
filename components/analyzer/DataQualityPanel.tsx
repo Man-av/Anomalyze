@@ -46,7 +46,7 @@ export function DataQualityPanel({ quality: q }: { quality: QualityReport }) {
       />
       <CardBody>
         <div className="flex items-baseline gap-2">
-          <span className="text-4xl font-semibold tabular-nums tracking-tight">
+          <span className="font-heading text-4xl font-semibold tabular-nums tracking-tight">
             {q.score}
           </span>
           <span className="text-sm text-muted-2">/ 100</span>
@@ -60,7 +60,10 @@ export function DataQualityPanel({ quality: q }: { quality: QualityReport }) {
           aria-label="Data quality score"
         >
           <div
-            className={cn("h-full rounded-full transition-all", TONE_BAR[tone])}
+            className={cn(
+              "h-full rounded-full transition-[width] duration-[var(--dur-long)] ease-out",
+              TONE_BAR[tone],
+            )}
             style={{ width: `${q.score}%` }}
           />
         </div>
@@ -73,14 +76,19 @@ export function DataQualityPanel({ quality: q }: { quality: QualityReport }) {
                 className="flex items-center justify-between text-sm"
               >
                 <span className="text-muted">{c.label}</span>
-                <span className="tabular-nums font-medium text-danger">
+                {/* The penalty was `text-danger`, which is ~3.9:1 on a light
+                    surface — under AA at this size. The minus sign carries the
+                    sign; ink carries the reading. */}
+                <span className="font-medium tabular-nums text-foreground">
                   −{c.penalty}
                 </span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="mt-4 text-sm text-ok">No quality issues detected.</p>
+          <p className="mt-4 text-sm text-foreground">
+            No quality issues detected.
+          </p>
         )}
 
         <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4">

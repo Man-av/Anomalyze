@@ -35,6 +35,18 @@ const SAMPLES: Sample[] = [
 
 const ACCEPT = ".csv,.xlsx,.xls";
 
+/**
+ * The page's primary action and its largest single element. Width is decided by
+ * the caller (LandingHero's 34rem column), not here.
+ *
+ * Accent appears in exactly one place: the active drag state, where it is
+ * genuine state feedback. Plain hover moves the rule and the surface instead —
+ * three accent-bordered targets stacked on one screen is the whole budget spent
+ * on hover states.
+ *
+ * No focus classes: the `:focus-visible` rule in globals.css governs every
+ * focusable element in the app, including this `role="button"` div.
+ */
 export function Uploader() {
   const { analyzeFile, loadSample } = useAnalyzer();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,7 +67,7 @@ export function Uploader() {
   }
 
   return (
-    <div className="mx-auto max-w-xl">
+    <div>
       <div
         role="button"
         tabIndex={0}
@@ -74,22 +86,23 @@ export function Uploader() {
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "group cursor-pointer rounded-2xl border-2 border-dashed p-10 text-center transition-colors",
+          "group cursor-pointer rounded-panel border-2 border-dashed px-6 py-12 text-center",
+          "transition-[background-color,border-color] duration-[var(--dur-micro)] ease-out",
           dragging
-            ? "border-accent bg-accent-soft/40"
-            : "border-border-strong bg-surface/50 hover:border-accent hover:bg-surface",
+            ? "border-accent bg-accent-soft"
+            : "border-border-strong bg-surface hover:border-foreground hover:bg-surface-2",
         )}
       >
         <UploadIcon
           className={cn(
-            "mx-auto transition-colors",
-            dragging ? "text-accent" : "text-muted group-hover:text-accent",
+            "mx-auto transition-colors duration-[var(--dur-micro)] ease-out",
+            dragging ? "text-accent" : "text-muted-2 group-hover:text-foreground",
           )}
         />
-        <p className="mt-4 text-[15px] font-medium text-foreground">
+        <p className="mt-4 text-base font-medium text-foreground">
           Drop your file here, or click to browse
         </p>
-        <p className="mt-1 text-sm text-muted-2">.csv, .xlsx or .xls — up to ~25MB</p>
+        <p className="mt-1 text-sm text-muted">.csv, .xlsx or .xls — up to ~25MB</p>
         <input
           ref={inputRef}
           type="file"
@@ -99,22 +112,20 @@ export function Uploader() {
         />
       </div>
 
-      <div className="mt-4">
-        <p className="mb-2 text-center text-xs text-muted-2">
-          No account needed — or try a sample:
-        </p>
-        <div className="flex flex-wrap justify-center gap-2">
+      <div className="mt-5">
+        <p className="text-xs text-muted-2">No account needed — or try a sample:</p>
+        <div className="mt-2 flex flex-wrap gap-2">
           {SAMPLES.map((s) => (
             <button
               key={s.file}
               type="button"
               onClick={() => void loadSample(s.path, s.file)}
-              className="group rounded-lg border border-border bg-surface px-3 py-2 text-left transition-colors hover:border-accent hover:bg-surface-2"
+              className="min-w-0 rounded-sm border border-border bg-surface px-3 py-2 text-left transition-colors duration-[var(--dur-micro)] ease-out hover:border-border-strong hover:bg-surface-2"
             >
               <span className="block text-sm font-medium text-foreground">
                 {s.name}
               </span>
-              <span className="block text-xs text-muted-2">{s.note}</span>
+              <span className="block font-mono text-xs text-muted-2">{s.note}</span>
             </button>
           ))}
         </div>

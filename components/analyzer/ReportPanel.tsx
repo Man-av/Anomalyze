@@ -52,7 +52,7 @@ function Section({ label, children }: { label: string; children: string }) {
   if (!children) return null;
   return (
     <div>
-      <h4 className="text-xs font-medium uppercase tracking-wide text-muted-2">{label}</h4>
+      <h4 className="text-sm font-semibold text-foreground">{label}</h4>
       <p className="mt-1 text-sm leading-relaxed text-foreground/90">{children}</p>
     </div>
   );
@@ -158,13 +158,13 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
 
             {report.keyFindings.length > 0 ? (
               <div className="border-t border-border pt-4">
-                <h4 className="text-xs font-medium uppercase tracking-wide text-muted-2">
+                <h4 className="text-sm font-semibold text-foreground">
                   Key findings
                 </h4>
                 <ul className="mt-2 space-y-1.5">
                   {report.keyFindings.map((f, i) => (
                     <li key={i} className="flex gap-2 text-sm leading-relaxed">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-border-strong" />
                       <span>{f}</span>
                     </li>
                   ))}
@@ -174,7 +174,7 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
 
             {report.suggestedQuestions.length > 0 ? (
               <div className="border-t border-border pt-4">
-                <h4 className="text-xs font-medium uppercase tracking-wide text-muted-2">
+                <h4 className="text-sm font-semibold text-foreground">
                   Questions to explore
                 </h4>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -184,14 +184,14 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
                         key={i}
                         type="button"
                         onClick={() => bridge.ask(q)}
-                        className="rounded-full border border-border bg-surface-2 px-3 py-1 text-xs text-muted transition-colors hover:border-accent hover:bg-accent-soft hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                        className="rounded-sm border border-border bg-surface-2 px-3 py-1 text-left text-xs text-muted transition-colors duration-[var(--dur-micro)] ease-out hover:border-border-strong hover:bg-surface-3 hover:text-foreground"
                       >
                         {q}
                       </button>
                     ) : (
                       <span
                         key={i}
-                        className="rounded-full border border-border bg-surface-2 px-3 py-1 text-xs text-muted"
+                        className="rounded-sm border border-border bg-surface-2 px-3 py-1 text-xs text-muted"
                       >
                         {q}
                       </span>

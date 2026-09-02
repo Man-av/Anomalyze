@@ -29,9 +29,11 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
       {icon ? (
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-3 text-muted-2">
+        // Bare glyph, no tinted circle behind it. The circle-blob empty state is
+        // on every generated app and it makes an absence look like a feature.
+        <span className="mb-3 text-muted-2" aria-hidden="true">
           {icon}
-        </div>
+        </span>
       ) : null}
       <p className="text-sm font-medium">{title}</p>
       {description ? (
@@ -55,9 +57,9 @@ export function ErrorState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
-      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-danger-soft text-danger">
-        <AlertIcon size={22} />
-      </div>
+      <span className="mb-3 text-danger" aria-hidden="true">
+        <AlertIcon size={24} />
+      </span>
       <p className="text-sm font-medium">{title}</p>
       <p className="mt-1 max-w-md text-sm text-muted">{message}</p>
       {onRetry ? (

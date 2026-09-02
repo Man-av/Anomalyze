@@ -1,0 +1,193 @@
+/* ============================================================================
+   Anomalyze — locked design tokens
+   Source of truth: design.md (project root). Read it before changing anything
+   here. Every colour and every font in the app resolves through this file.
+
+   Do not inline a hex, an oklch(...), an rgb(...), or a font-family anywhere in
+   a component. If you need a value that isn't here, add it here first.
+
+   Lightness values are carried over from the previous hex palette, so contrast
+   ratios are unchanged. Hue and chroma moved: the neutrals were cool (265°)
+   under a warm ochre accent (49°), which is the one palette mistake readers
+   feel but can't name. Neutrals now lean warm (78°) toward the anchor.
+============================================================================ */
+
+:root {
+  /* ── Paper & ink ─────────────────────────────────────────────────────────
+     Warm near-white. Nothing is pure #fff: the paper carries a trace of the
+     anchor's chroma so the accent sits on it rather than on top of it.       */
+  --background: oklch(97.4% 0.006 80);
+  --surface: oklch(99.2% 0.004 80);
+  --surface-2: oklch(95.6% 0.008 80);
+  --surface-3: oklch(93.2% 0.010 78);
+  --border: oklch(91.5% 0.010 78);
+  --border-strong: oklch(86.5% 0.014 76);
+  --foreground: oklch(20.5% 0.012 70);
+  --muted: oklch(47.5% 0.014 72);
+  --muted-2: oklch(54.0% 0.012 74);
+
+  /* ── Accent ──────────────────────────────────────────────────────────────
+     Inherited brand ochre, converted from #b45309 — not re-picked. Budget is
+     ≤3% of any viewport: focus ring, active rail item, one primary button,
+     a word or two of hero emphasis. Never a background wash.                */
+  --accent: oklch(55.5% 0.145 49);
+  --accent-hover: oklch(47.3% 0.125 46);
+  --accent-soft: oklch(96.1% 0.024 71);
+  --accent-fg: oklch(99.2% 0.004 80);
+
+  /* ── Semantic signals ────────────────────────────────────────────────────
+     --warn moved 70° → 88°. At 70° an amber badge was indistinguishable from
+     an accent badge on a warm page; at 88° it is still plainly amber and
+     plainly not the accent.                                                  */
+  --ok: oklch(60.9% 0.126 164);
+  --ok-soft: oklch(94.5% 0.027 170);
+  --warn: oklch(62.6% 0.128 88);
+  --warn-soft: oklch(95.8% 0.033 92);
+  --danger: oklch(59.8% 0.181 20);
+  --danger-soft: oklch(93.6% 0.027 12);
+  --info: oklch(58.7% 0.147 251);
+  --info-soft: oklch(94.3% 0.023 246);
+
+  /* Focus: accent hue at raised chroma. Never animated, never below 3:1. */
+  --ring: oklch(52% 0.190 49);
+
+  /* ── Data-encoding palette (light) ───────────────────────────────────────
+     Carried over unchanged. These hues and their order were validated for
+     colour-vision deficiency, and the diverging pair (indigo ↔ orange) is
+     cool-vs-warm so sign reads without relying on red/green. A visual
+     redesign does not get to invalidate that — only the notation moved.
+
+     --chart-grid and --chart-axis are the exception: they are chrome, not
+     data, so they retint warm with the rest of the page.                    */
+  --chart-1: oklch(53.6% 0.206 279);
+  --chart-2: oklch(60.0% 0.104 185);
+  --chart-3: oklch(66.6% 0.157 58);
+  --chart-4: oklch(59.2% 0.218 1);
+  --chart-5: oklch(58.8% 0.139 242);
+  --chart-6: oklch(54.1% 0.247 293);
+  --chart-7: oklch(62.7% 0.170 149);
+  --chart-8: oklch(64.6% 0.194 41);
+  --chart-pos: oklch(53.6% 0.206 279);
+  --chart-neg: oklch(64.6% 0.194 41);
+  --chart-anomaly: oklch(59.8% 0.181 20);
+  --chart-grid: oklch(91.5% 0.010 78);
+  --chart-axis: oklch(63.9% 0.012 74);
+
+  /* ── Type ────────────────────────────────────────────────────────────────
+     Three families, at the 2+1 ceiling: display + body + one outlier.
+     The next/font variables are set on <html> in app/layout.tsx.            */
+  --font-display: var(--font-space-grotesk), "Space Grotesk", ui-sans-serif,
+    sans-serif;
+  --font-body: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-data: var(--font-jetbrains), "JetBrains Mono", ui-monospace,
+    "SFMono-Regular", Menlo, monospace;
+
+  /* 1.25 major third from a 16px body, `--fs-` prefixed.
+
+     The prefix is not decoration. Tailwind v4 emits its own theme as :root
+     custom properties, so declaring --text-lg / --text-xl / --text-2xl here
+     would silently resize every existing `text-lg` / `text-xl` / `text-2xl`
+     utility in the app. Steps at or below 1rem match Tailwind exactly and are
+     simply not restated — use `text-xs` / `text-sm` / `text-base`.          */
+  --fs-lede: 1.25rem; /*   20px  hero lede           */
+  --fs-panel: 1.5625rem; /*   25px  panel titles        */
+  --fs-head: 1.9531rem; /*   31px  section heads       */
+  --fs-head-lg: 2.4414rem; /*   39px                      */
+  /* The hero h1 is 63 chars → the 51–90 bucket → hero, not hero-lg.
+     A 63-char headline at full display size is a typography tell.           */
+  --fs-hero: clamp(1.9125rem, 2.88vw + 0.9rem, 2.925rem);
+  --fs-hero-lg: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+
+  --leading-display: 1.06;
+  --leading-head: 1.25;
+  --leading-body: 1.55;
+  --tracking-display: -0.025em;
+
+  /* ── Space — 4pt base, nine steps, named by role ─────────────────────── */
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* ── Radius — tight, instrument register (was 14px, which reads consumer) */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-card: 8px;
+
+  /* Depth is weight and lightness, not shadow. Two tokens only, and the first
+     is a rule wearing a shadow's clothes. No coloured glows, nothing stacked.
+     --shadow-tooltip is the one genuine elevation in the app: the chart tooltip
+     floats over the plot area, so it needs to read as detached. */
+  --shadow-hair: 0 1px 0 var(--border);
+  --shadow-tooltip: 0 10px 30px -10px oklch(20.5% 0.012 70 / 0.28);
+
+  /* ── Motion — motion-cut project, CSS transitions only ────────────────── */
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ── Z — six named levels, no ad-hoc values ───────────────────────────── */
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ── Dark ──────────────────────────────────────────────────────────────────
+   Hue never switches between modes; only lightness and chroma move.
+   Elevation climbs by lightness (~3.5% per step), never by shadow.          */
+[data-theme="dark"] {
+  --background: oklch(14.8% 0.008 70);
+  --surface: oklch(19.4% 0.010 70);
+  --surface-2: oklch(22.8% 0.012 72);
+  --surface-3: oklch(26.4% 0.013 72);
+  --border: oklch(28.6% 0.012 70);
+  --border-strong: oklch(35.6% 0.014 72);
+  --foreground: oklch(93.8% 0.008 80);
+  --muted: oklch(71.0% 0.012 74);
+  --muted-2: oklch(64.5% 0.012 74);
+
+  --accent: oklch(78.3% 0.145 73);
+  --accent-hover: oklch(83.0% 0.125 77);
+  --accent-soft: oklch(24.8% 0.032 76);
+  --accent-fg: oklch(14.8% 0.008 70);
+
+  --ok: oklch(77.3% 0.154 163);
+  --ok-soft: oklch(24.1% 0.030 169);
+  --warn: oklch(81.3% 0.145 92);
+  --warn-soft: oklch(25.4% 0.028 92);
+  --danger: oklch(69.0% 0.170 20);
+  --danger-soft: oklch(22.6% 0.035 11);
+  --info: oklch(74.5% 0.128 240);
+  --info-soft: oklch(24.4% 0.038 244);
+
+  --ring: oklch(80% 0.180 73);
+
+  /* On dark the tooltip sits on a light-elevated surface, so the shadow
+     tightens and deepens rather than tinting. */
+  --shadow-tooltip: 0 10px 30px -10px oklch(4% 0.010 70 / 0.62);
+
+  --chart-1: oklch(66.4% 0.181 278);
+  --chart-2: oklch(78.5% 0.133 182);
+  --chart-3: oklch(83.7% 0.164 84);
+  --chart-4: oklch(72.5% 0.175 350);
+  --chart-5: oklch(74.5% 0.128 240);
+  --chart-6: oklch(72.2% 0.177 306);
+  --chart-7: oklch(80.0% 0.182 152);
+  --chart-8: oklch(75.8% 0.159 56);
+  --chart-pos: oklch(66.4% 0.181 278);
+  --chart-neg: oklch(75.8% 0.159 56);
+  --chart-anomaly: oklch(69.0% 0.170 20);
+  --chart-grid: oklch(28.6% 0.012 70);
+  --chart-axis: oklch(55.1% 0.012 74);
+}

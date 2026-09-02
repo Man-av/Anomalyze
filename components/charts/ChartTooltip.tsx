@@ -47,8 +47,7 @@ export function ChartTooltip({
 
   return (
     <div
-      className="pointer-events-none min-w-[7rem] rounded-lg border border-border-strong bg-surface px-3 py-2 text-xs"
-      style={{ boxShadow: "0 10px 30px -10px hsl(var(--shadow-color) / 0.55)" }}
+      className="pointer-events-none min-w-[7rem] rounded-md border border-border-strong bg-surface px-3 py-2 text-xs shadow-[var(--shadow-tooltip)]"
     >
       {!hideLabel && rawLabel !== undefined && rawLabel !== "" ? (
         <div className="mb-1.5 font-medium text-foreground">

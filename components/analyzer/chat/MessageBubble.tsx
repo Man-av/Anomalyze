@@ -5,9 +5,10 @@ import { cn } from "@/lib/cn";
 import { Markdown } from "./Markdown";
 
 /**
- * One chat turn. User turns are plain text in an accent bubble; assistant
- * turns render markdown. An assistant turn that is still empty while streaming
- * shows a "Thinking…" placeholder.
+ * One chat turn. Alignment separates the speakers; a lightness step separates
+ * the surfaces. The user turn used to be a solid accent fill, which spent the
+ * whole accent budget on a transcript that only grows.
+ * An assistant turn that is still empty while streaming shows "Thinking…".
  */
 export function MessageBubble({
   role,
@@ -23,8 +24,10 @@ export function MessageBubble({
     <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
       <div
         className={cn(
-          "max-w-[85%] rounded-2xl px-3.5 py-2.5",
-          isUser ? "rounded-br-sm bg-accent text-accent-fg" : "rounded-bl-sm bg-surface-2 text-foreground",
+          "max-w-[85%] min-w-0 rounded-panel px-3.5 py-2.5",
+          isUser
+            ? "rounded-br-sm bg-surface-3 text-foreground"
+            : "rounded-bl-sm bg-surface-2 text-foreground",
         )}
       >
         {isUser ? (

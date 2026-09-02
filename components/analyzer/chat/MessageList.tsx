@@ -30,9 +30,9 @@ export function MessageList({
     return (
       <div className="py-4">
         <div className="mb-4 flex flex-col items-center text-center">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-3 text-muted-2">
-            <ChatIcon size={22} />
-          </div>
+          <span className="mb-3 text-muted-2" aria-hidden="true">
+            <ChatIcon size={24} />
+          </span>
           <p className="text-sm font-medium">Ask anything about your data</p>
           <p className="mt-1 max-w-sm text-sm text-muted-2">
             Answers are grounded in the statistics computed locally — only a small, capped sample of rows
@@ -45,7 +45,7 @@ export function MessageList({
               key={s}
               type="button"
               onClick={() => onAsk(s)}
-              className="rounded-full border border-border bg-surface-2 px-3 py-1.5 text-xs text-muted transition-colors hover:bg-surface-3 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+              className="rounded-sm border border-border bg-surface-2 px-3 py-1.5 text-left text-xs text-muted transition-colors duration-[var(--dur-micro)] ease-out hover:border-border-strong hover:bg-surface-3 hover:text-foreground"
             >
               {s}
             </button>

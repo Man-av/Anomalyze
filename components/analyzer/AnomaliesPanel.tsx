@@ -70,18 +70,21 @@ export function AnomaliesPanel({ anomalies }: { anomalies: Anomaly[] }) {
                           row {fmtInt(a.rowIndex + 1)}
                         </span>
                       </td>
-                      <td className="px-3 py-2 text-right font-medium tabular-nums">
+                      <td className="px-3 py-2 text-right font-mono font-medium tabular-nums">
                         {fmtNum(a.value)}
                       </td>
                       <td className="px-3 py-2 text-xs text-muted">
                         {METHOD_LABEL[a.method]}
                         {a.corroborated ? (
-                          <span className="ml-1 text-ok" title="Corroborated by both methods">
+                          <span
+                            className="ml-1 text-foreground"
+                            title="Corroborated by both methods"
+                          >
                             ✓
                           </span>
                         ) : null}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-muted">
+                      <td className="px-3 py-2 text-right font-mono tabular-nums text-muted">
                         {fmtNum(a.score)}
                       </td>
                       <td className="px-5 py-2">

@@ -28,6 +28,11 @@ next-env.d.ts
 # local claude settings
 .claude/
 
+# local ai agent / design tool files
+.agents/
+.hallmark/
+skills-lock.json
+
 # misc
 .DS_Store
 *.pem

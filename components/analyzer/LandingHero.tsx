@@ -1,27 +1,30 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { ChartIcon, ChatIcon, DocIcon } from "@/components/icons";
+import { Fragment } from "react";
 import { Card } from "@/components/ui/Card";
 import { ErrorState, Spinner } from "@/components/ui/states";
 import { useAnalyzer } from "./AnalyzerContext";
 import { Uploader } from "./Uploader";
 
-const SIDE_FEATURES: { title: string; body: string; icon: ReactNode }[] = [
+/**
+ * The three capability claims. Copy verbatim from the previous bento grid — the
+ * "Auto dashboard" entry carries the longer body it had as the grid's large
+ * cell, of which the short version was a prefix, so nothing is lost.
+ *
+ * The `icon` field is gone with the icon-in-coloured-square tiles it fed.
+ */
+const FEATURES: { term: string; body: string }[] = [
   {
-    title: "Instant report",
+    term: "Instant report",
     body: "A plain-English read on shape, trends, and quality — written by the LLM, or composed deterministically when it isn't available.",
-    icon: <DocIcon />,
   },
   {
-    title: "Auto dashboard",
-    body: "Histograms, time series, correlations — the right chart is ranked and chosen per column type, not forced.",
-    icon: <ChartIcon />,
+    term: "Auto dashboard",
+    body: "Histograms, time series, correlations — the right chart is ranked and chosen per column type, not forced. A categorical column never gets stuffed into a line chart just because it was easy.",
   },
   {
-    title: "Chat with it",
+    term: "Chat with it",
     body: "Ask questions in plain English, grounded on pre-computed facts and a stratified sample — not raw-row guesswork.",
-    icon: <ChatIcon />,
   },
 ];
 
@@ -53,7 +56,7 @@ function AnomalySparkline() {
       <circle cx="232" cy="38" r="5" fill="var(--chart-anomaly)" stroke="var(--surface)" strokeWidth="2" />
       <g transform="translate(240, 12)">
         <rect width="112" height="24" rx="6" fill="var(--danger-soft)" />
-        <text x="8" y="16" fontFamily="var(--font-mono)" fontSize="11" fontWeight="600" fill="var(--danger)">
+        <text x="8" y="16" className="font-mono" fontSize="11" fontWeight="600" fill="var(--danger)">
           3.8σ · flagged
         </text>
       </g>
@@ -64,10 +67,10 @@ function AnomalySparkline() {
 function ProcessingCard({ fileName, phase }: { fileName: string | null; phase: string }) {
   const label = phase === "parsing" ? "Parsing file…" : "Profiling columns…";
   return (
-    <Card className="mx-auto max-w-xl">
+    <Card>
       <div className="flex flex-col items-center px-6 py-12 text-center">
         <Spinner size={28} />
-        <p className="mt-4 text-[15px] font-medium">{label}</p>
+        <p className="mt-4 text-base font-medium">{label}</p>
         {fileName ? (
           <p className="mt-1 font-mono text-xs text-muted-2">{fileName}</p>
         ) : null}
@@ -76,6 +79,11 @@ function ProcessingCard({ fileName, phase }: { fileName: string | null; phase: s
   );
 }
 
+/**
+ * All three states of the upload slot fill their container rather than
+ * self-centring at `max-w-xl`. The 34rem column below is the one place that
+ * width is decided, so the slot never disagrees with the caption under it.
+ */
 function DropArea() {
   const { phase, fileName, error, reset } = useAnalyzer();
   if (phase === "parsing" || phase === "profiling") {
@@ -83,7 +91,7 @@ function DropArea() {
   }
   if (phase === "error") {
     return (
-      <Card className="mx-auto max-w-xl">
+      <Card>
         <ErrorState
           title="Couldn't analyze that file"
           message={error ?? "Please try a different file."}
@@ -98,35 +106,25 @@ function DropArea() {
 
 export function LandingHero() {
   return (
-    <main className="mx-auto max-w-6xl px-6">
-      {/* ── Hero ── */}
-      <section className="grid items-center gap-10 pt-16 pb-14 sm:pt-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
-        <div className="text-center lg:text-left">
-          {/* Hallmark eyebrow: dot + monospace category label */}
-          <div className="mx-auto mb-5 flex items-center justify-center gap-2 lg:mx-0 lg:justify-start">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden />
-            <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
-              Anomaly Detection · In-browser
-            </span>
-          </div>
+    <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      {/* ── Hero ──────────────────────────────────────────────────────────────
+          Left-biased and asymmetric, and left-aligned at every width: a
+          centred hero column is the single most common generated-landing
+          layout. `minmax(0, …)` on both tracks so the sparkline can't push
+          the grid wider than the viewport. */}
+      <section className="grid items-center gap-10 pt-16 pb-14 sm:pt-24 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
+        <div>
+          {/* Was a dot + mono-uppercase-tracked eyebrow. Same words, now a
+              plain descriptor in the body face. */}
+          <p className="mb-5 text-sm text-muted">Anomaly Detection · In-browser</p>
 
-          <h1 className="font-heading mx-auto max-w-xl text-balance text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:mx-0">
+          <h1 className="text-hero leading-hero tracking-hero font-semibold">
             Every dataset has a point that doesn&rsquo;t belong.
             <br />
-            <span
-              style={{
-                fontFamily: "'GoingToDoGreatThings', cursive",
-                fontWeight: 400,
-                fontSize: "1.8em",
-              }}
-              className="text-accent"
-            >
-              Anomalyze
-            </span>
-            <span className="text-accent"> finds it.</span>
+            <span className="text-accent">Anomalyze</span> finds it.
           </h1>
 
-          <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted sm:text-lg lg:mx-0">
+          <p className="mt-6 max-w-[65ch] text-lede text-pretty text-muted">
             Drop in a CSV or Excel file. Anomalyze profiles every column, flags
             real outliers with MAD &amp; IQR &mdash; not a fooled-by-its-own-outliers
             3σ &mdash; builds the right chart per column, and takes questions in
@@ -134,81 +132,51 @@ export function LandingHero() {
           </p>
         </div>
 
-        {/* Sparkline hero art */}
-        <div className="rounded-[var(--radius-card)] border border-border bg-surface p-4 shadow-[0_1px_0_var(--border)]">
-          <div className="mb-2 flex items-center justify-between px-1">
-            <span className="font-mono text-[11px] uppercase tracking-wide text-muted-2">
-              revenue.csv &middot; row 232
-            </span>
-            <span className="font-mono text-[11px] text-muted-2">MAD robust-z</span>
+        {/* Hairline frame, no shadow: the border already draws the edge, and a
+            second edge under it is depth for its own sake. */}
+        <div className="rounded-panel border border-border bg-surface p-4">
+          <div className="mb-2 flex items-center justify-between gap-3 px-1 font-mono text-xs text-muted-2">
+            <span className="truncate">revenue.csv &middot; row 232</span>
+            <span className="shrink-0">MAD robust-z</span>
           </div>
           <AnomalySparkline />
         </div>
       </section>
 
-      {/* ── 01 / Upload ── */}
-      <section className="pb-12">
-        <div className="mb-6 flex items-center gap-3">
-          <span className="font-mono text-sm font-semibold text-accent">01</span>
-          <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted-2">/&nbsp;&nbsp;Upload your data</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
-        <div className="mx-auto max-w-xl">
+      {/* ── Upload ─────────────────────────────────────────────────────────── */}
+      <section className="pb-16">
+        <h2 className="text-head leading-head font-semibold tracking-tight">
+          Upload your data
+        </h2>
+        <div className="mt-6 max-w-[34rem]">
           <DropArea />
+          <p className="mt-4 font-mono text-xs text-muted-2">
+            CSV &nbsp;·&nbsp; Excel (.xlsx / .xls) &nbsp;·&nbsp; analyzed entirely in your browser
+          </p>
         </div>
-        <p className="mt-4 text-center font-mono text-[11px] text-muted-2">
-          CSV &nbsp;·&nbsp; Excel (.xlsx / .xls) &nbsp;·&nbsp; analyzed entirely in your browser
-        </p>
       </section>
 
-      {/* ── 02 / What it does ── */}
+      {/* ── What it does ───────────────────────────────────────────────────────
+          A definition list, because that is what this content is: three named
+          capabilities and their descriptions. Rows are separated by a hairline
+          and nothing else — no tiles, no chips, no equal-column grid. */}
       <section className="pb-24">
-        <div className="mb-6 flex items-center gap-3">
-          <span className="font-mono text-sm font-semibold text-accent">02</span>
-          <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted-2">/&nbsp;&nbsp;What it does</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3 md:grid-rows-2">
-          <div className="rounded-[var(--radius-card)] border border-border bg-surface p-6 md:col-span-2 md:row-span-2">
-            <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
-              <ChartIcon />
-            </div>
-            <h3 className="font-heading text-base font-semibold">Auto dashboard</h3>
-            <p className="mt-1.5 max-w-md text-sm leading-relaxed text-muted">
-              Histograms, time series, correlations — the right chart is ranked
-              and chosen per column type, not forced. A categorical column never
-              gets stuffed into a line chart just because it was easy.
-            </p>
-            <div className="mt-6 flex items-end gap-1.5" aria-hidden>
-              {[38, 62, 44, 80, 52, 70, 30, 58, 90, 46].map((h, i) => (
-                <div
-                  key={i}
-                  className="w-full rounded-t-sm"
-                  style={{
-                    height: `${h}px`,
-                    background: i === 8 ? "var(--chart-anomaly)" : "var(--chart-1)",
-                    opacity: i === 8 ? 1 : 0.55,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {SIDE_FEATURES.filter((f) => f.title !== "Auto dashboard").map((f) => (
-            <div
-              key={f.title}
-              className="rounded-[var(--radius-card)] border border-border bg-surface p-5"
-            >
-              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
-                {f.icon}
-              </div>
-              <h3 className="font-heading text-sm font-semibold">{f.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted">{f.body}</p>
-            </div>
+        <h2 className="text-head leading-head font-semibold tracking-tight">
+          What it does
+        </h2>
+        <dl className="mt-6 grid border-b border-border sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
+          {FEATURES.map((f) => (
+            <Fragment key={f.term}>
+              <dt className="border-t border-border pt-4 pb-1.5 font-heading text-base font-semibold text-foreground sm:pr-8 sm:pb-5">
+                {f.term}
+              </dt>
+              <dd className="pb-5 text-sm leading-relaxed text-muted sm:border-t sm:border-border sm:pt-4">
+                {f.body}
+              </dd>
+            </Fragment>
           ))}
-        </div>
+        </dl>
       </section>
-    </main>
+    </div>
   );
 }

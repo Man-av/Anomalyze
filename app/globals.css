@@ -1,115 +1,25 @@
-@import "tailwindcss";
+/* Hallmark · genre: modern-minimal · macrostructure: 05 Workbench (landing) + 16 Feature Stack (dashboard app shell) · design-system: design.md · designed-as-app
+ * theme: custom (tuned) · vibe: "analyst's instrument, quiet, evidence-first"
+ * paper: oklch(97.4% 0.006 80) · accent: oklch(55.5% 0.145 49) (inherited brand ochre, converted not re-picked)
+ * display: Space Grotesk · body: Geist · mono: JetBrains Mono
+ * axes: light / geometric-sans / warm · nav: N9 edge-aligned · footer: Ft5 statement
+ * studied: no · context: inferred · v0.8.0
+ */
 
-@font-face {
-  font-family: "GoingToDoGreatThings";
-  src: url("/fonts/GoingToDoGreatThings.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+@import "tailwindcss";
+@import "./tokens.css";
 
 /* Enable `dark:` utilities driven by the data-theme attribute on <html>. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* ---------------------------------------------------------------------------
-   Semantic design tokens. Light is the base in :root; [data-theme="dark"]
-   overrides. Layout defaults to dark (set on <html> in layout.tsx).
-   Data-encoding colors (categorical / sequential / diverging) are defined
-   separately and validated with the dataviz palette pass before charts land.
---------------------------------------------------------------------------- */
-:root {
-  --background: #f6f7f9;
-  --surface: #ffffff;
-  --surface-2: #eef0f4;
-  --surface-3: #e6e9ef;
-  --border: #e2e5ec;
-  --border-strong: #cfd4de;
-  --foreground: #14161c;
-  --muted: #545b6a;
-  --muted-2: #616776;
+/* Map tokens to Tailwind theme so `bg-surface`, `text-muted`, `text-hero` etc.
+   work and respond to theme switches (the `inline` keyword keeps the var()
+   reference, so a [data-theme] override reaches the utility).
 
-  --accent: #b45309;
-  --accent-hover: #92400e;
-  --accent-soft: #fdf0e1;
-  --accent-fg: #ffffff;
-
-  --ok: #129a6e;
-  --ok-soft: #dcf3ea;
-  --warn: #b7791f;
-  --warn-soft: #fbf0d9;
-  --danger: #d64550;
-  --danger-soft: #fbe3e5;
-  --info: #2a7fd0;
-  --info-soft: #e0eefb;
-
-  --ring: color-mix(in srgb, var(--accent) 55%, transparent);
-  --shadow-color: 220 25% 12%;
-
-  /* Data-encoding palette (light). Categorical hues are spaced for maximum
-     separation and chosen to stay distinguishable under common color-vision
-     deficiencies; the diverging pair (indigo ↔ orange) is cool-vs-warm so sign
-     reads without relying on red/green. */
-  --chart-1: #5a54e0;
-  --chart-2: #0d9488;
-  --chart-3: #d97706;
-  --chart-4: #db2777;
-  --chart-5: #0284c7;
-  --chart-6: #7c3aed;
-  --chart-7: #16a34a;
-  --chart-8: #ea580c;
-  --chart-pos: #5a54e0;
-  --chart-neg: #ea580c;
-  --chart-anomaly: #d64550;
-  --chart-grid: #e2e5ec;
-  --chart-axis: #858c9b;
-}
-
-[data-theme="dark"] {
-  --background: #0a0b0f;
-  --surface: #13151b;
-  --surface-2: #191c24;
-  --surface-3: #21242e;
-  --border: #262a34;
-  --border-strong: #363c49;
-  --foreground: #e8eaf1;
-  --muted: #9aa1b1;
-  --muted-2: #868e9e;
-
-  --accent: #f0a83c;
-  --accent-hover: #f5bc63;
-  --accent-soft: #2a1f0f;
-  --accent-fg: #0a0b0f;
-
-  --ok: #34d399;
-  --ok-soft: #10241d;
-  --warn: #f5b544;
-  --warn-soft: #2a2113;
-  --danger: #f2686f;
-  --danger-soft: #2a1518;
-  --info: #56b6f5;
-  --info-soft: #0f2231;
-
-  --ring: color-mix(in srgb, var(--accent) 60%, transparent);
-  --shadow-color: 240 60% 2%;
-
-  /* Data-encoding palette (dark) — brighter variants for the dark surfaces. */
-  --chart-1: #7c83ff;
-  --chart-2: #2dd4bf;
-  --chart-3: #fbbf24;
-  --chart-4: #f472b6;
-  --chart-5: #56b6f5;
-  --chart-6: #c084fc;
-  --chart-7: #4ade80;
-  --chart-8: #fb923c;
-  --chart-pos: #7c83ff;
-  --chart-neg: #fb923c;
-  --chart-anomaly: #f2686f;
-  --chart-grid: #262a34;
-  --chart-axis: #6b7280;
-}
-
-/* Map tokens to Tailwind theme so `bg-surface`, `text-muted`, etc. work and
-   respond to theme switches (the `inline` keyword keeps the var() reference). */
+   Theme keys are deliberately named differently from the tokens they point at.
+   Same-name mapping (`--text-hero: var(--text-hero)`) is a self-reference; and
+   any key Tailwind already ships (`--text-lg`, `--radius-md`) would silently
+   redefine existing utilities across the app. Neither happens here. */
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -125,6 +35,12 @@
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
   --color-accent-fg: var(--accent-fg);
+  /* Accent as small text needs more contrast than accent as a fill does:
+     `--accent` lands near 4.2:1 on a light surface, which misses AA at body
+     sizes. `--accent-hover` already sits at the right lightness in both modes,
+     so this is an alias for a role, not a new colour. Large display text can
+     still use `text-accent` — 3:1 is the bar there and it clears it. */
+  --color-accent-ink: var(--accent-hover);
 
   --color-ok: var(--ok);
   --color-ok-soft: var(--ok-soft);
@@ -135,48 +51,107 @@
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo",
-    "Consolas", monospace;
-  --font-heading: var(--font-heading), var(--font-sans);
+  /* So a wrapper that shows focus for a borderless child inside it can write
+     `ring-ring` instead of `ring-[var(--ring)]`. */
+  --color-ring: var(--ring);
 
-  --radius-card: 14px;
+  /* Three families. `font-heading` keeps its name so existing markup that uses
+     it keeps working — it now resolves to Space Grotesk rather than to a
+     self-referential var, and `font-sans` resolves to Geist rather than to the
+     "Inter" that was named but never imported. */
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-data);
+  --font-heading: var(--font-display);
+
+  --text-lede: var(--fs-lede);
+  --text-panel: var(--fs-panel);
+  --text-head: var(--fs-head);
+  --text-head-lg: var(--fs-head-lg);
+  --text-hero: var(--fs-hero);
+  --text-hero-lg: var(--fs-hero-lg);
+
+  --leading-hero: var(--leading-display);
+  --leading-head: var(--leading-head);
+  --tracking-hero: var(--tracking-display);
+
+  --radius-panel: var(--radius-card);
 }
 
 @layer base {
   * {
     border-color: var(--border);
   }
+
+  /* `clip`, never `hidden`. `hidden` creates a scroll container, which breaks
+     the dashboard's sticky section rail and can trap focus on overflowing
+     inputs. Both html and body — body is the fallback for older Safari. */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
   }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
-    line-height: 1.55;
+    font-family: var(--font-body);
+    line-height: var(--leading-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  ::selection {
-    background: color-mix(in srgb, var(--accent) 30%, transparent);
+
+  /* Headings are roman. A single italicised emphasis word in a header is one of
+     the most reliable generated-page tells; enforce it here so no component can
+     reintroduce it. Emphasis is carried by weight or the accent. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-style: normal;
   }
+
+  /* Long unbroken tokens (a column name, a file name) must wrap inside display
+     sizes rather than push the page sideways at 320px. */
+  h1,
+  h2 {
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 24%, transparent);
+  }
+
+  /* Focus is instant and never animated — a ring that fades in leaves keyboard
+     users with no indicator for the length of the transition. */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
+    transition: none;
   }
-  /* Refined scrollbars (dark-first, unobtrusive) */
+
+  /* Refined scrollbars, unobtrusive in both themes. */
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--border-strong) transparent;
   }
 }
 
-/* Subtle radial glow used behind the hero. */
-.bg-hero-glow {
-  background:
-    radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 70%),
-    var(--background);
+/* Spatial motion collapses to opacity. Functional motion — the parse/profile
+   spinner, the quality-meter fill — keeps running, just slower. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 150ms !important;
+    transition-duration: 150ms !important;
+    scroll-behavior: auto !important;
+  }
 }
