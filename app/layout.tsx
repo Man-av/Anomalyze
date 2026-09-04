@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 /* Three families — display + body + one outlier — which is the ceiling.
@@ -55,7 +56,7 @@ export const viewport: Viewport = {
 
 // Runs before first paint to apply the saved (or system) theme, so there's no
 // flash of the default. `data-theme="dark"` on <html> is the no-JS fallback.
-const THEME_INIT = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+const THEME_INIT = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})()`;
 
 export default function RootLayout({
   children,
@@ -70,7 +71,9 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${geist.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT}
+        </Script>
       </head>
       {/* dvh, not vh — vh doesn't account for mobile browser chrome. */}
       <body className="min-h-dvh antialiased">{children}</body>

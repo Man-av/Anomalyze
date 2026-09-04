@@ -1,21 +1,17 @@
-/* Hallmark · genre: modern-minimal · macrostructure: 05 Workbench (landing) + 16 Feature Stack (dashboard app shell) · design-system: design.md · designed-as-app
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V5
+ * genre: modern-minimal · macrostructure: 05 Workbench (landing) + 16 Feature Stack (dashboard app shell) · design-system: design.md · designed-as-app
  * theme: custom (tuned) · vibe: "analyst's instrument, quiet, evidence-first"
  * paper: oklch(97.4% 0.006 80) · accent: oklch(55.5% 0.145 49) (inherited brand ochre, converted not re-picked)
  * display: Space Grotesk · body: Geist · mono: JetBrains Mono
  * axes: light / geometric-sans / warm · nav: N9 edge-aligned · footer: Ft5 statement
+ * contrast: pass (40–41) · nav: N9 · footer: Ft5 · slop: pass (42–45)
+ * honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30)
+ * mobile: pass (34, 49, 50–57)
  * studied: no · context: inferred · v0.8.0
  */
 
 @import "tailwindcss";
 @import "./tokens.css";
-
-@font-face {
-  font-family: "GoingToDoGreatThings";
-  src: url("/fonts/GoingToDoGreatThings.ttf") format("truetype");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
 
 
 /* Enable `dark:` utilities driven by the data-theme attribute on <html>. */
