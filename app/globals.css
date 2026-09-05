@@ -164,52 +164,58 @@
 
 /* ── Clerk patches ────────────────────────────────────────────────────────── */
 
-/* Clerk renders the "Last used" label in a nested element with its own text
-   colour. Style that child explicitly so the badge remains readable in both
-   themes. */
-.cl-badge,
-[class*="cl-badge"],
-.cl-socialButtonsBlockButtonBadge,
-[class*="socialButtonsBlockButtonBadge"],
-[data-localization-key*="lastUsed"] {
+/* Clerk's "Last used" marker has changed class names across component
+   versions. Keep the override within social buttons and match its stable
+   localization attribute as well as the public class variants. */
+.cl-socialButtonsBlockButton :is(
+  .cl-badge,
+  .cl-socialButtonsBlockButtonBadge,
+  [class*="badge" i],
+  [data-localization-key*="last" i]
+),
+.cl-socialButtonsBlockButton:is(
+  .cl-socialButtonsBlockButtonBadge,
+  [class*="badge" i],
+  [data-localization-key*="last" i]
+) {
   color: var(--accent) !important;
   font-weight: 700 !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
 
-.cl-badge *,
-[class*="cl-badge"] *,
-.cl-socialButtonsBlockButtonBadge *,
-[class*="socialButtonsBlockButtonBadge"] *,
-[data-localization-key*="lastUsed"] * {
-  color: var(--accent) !important;
-}
-
 [data-theme="dark"] .cl-socialButtonsProviderIcon__github {
   filter: invert(1) brightness(1.2) !important;
 }
 
-[data-theme="dark"] .cl-badge,
-[data-theme="dark"] [class*="cl-badge"],
-[data-theme="dark"] .cl-socialButtonsBlockButtonBadge,
-[data-theme="dark"] [class*="socialButtonsBlockButtonBadge"],
-[data-theme="dark"] [data-localization-key*="lastUsed"] {
-  background-color: oklch(22% 0.045 49) !important;
-  border: 1px solid oklch(45% 0.130 49) !important;
+[data-theme="dark"] .cl-socialButtonsBlockButton :is(
+  .cl-badge,
+  .cl-socialButtonsBlockButtonBadge,
+  [class*="badge" i],
+  [data-localization-key*="last" i]
+),
+[data-theme="dark"] .cl-socialButtonsBlockButton:is(
+  .cl-socialButtonsBlockButtonBadge,
+  [class*="badge" i],
+  [data-localization-key*="last" i]
+) {
+  background-color: var(--accent-soft) !important;
+  border: 1px solid var(--accent) !important;
   font-size: 0.58rem !important;
   letter-spacing: 0.05em !important;
   padding: 2px 6px !important;
   border-radius: 4px !important;
+  white-space: nowrap !important;
 }
 
-[data-theme="dark"] .cl-formFieldHintText,
-[data-theme="dark"] .cl-formFieldHintText__password,
-[data-theme="dark"] [class*="cl-formFieldHintText"],
-[data-theme="dark"] [class*="formFieldHintText"] {
-  color: oklch(78% 0.010 74) !important;
+[data-theme="dark"] .cl-formField:not(:has(.cl-formFieldErrorText:not(:empty))) .cl-formFieldInfoText {
+  color: var(--muted) !important;
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+.cl-formField:has(.cl-formFieldErrorText:not(:empty)) .cl-formFieldInfoText {
+  display: none !important;
 }
 
 [data-theme="dark"] .cl-footer {
