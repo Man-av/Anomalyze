@@ -14,6 +14,10 @@ export default proxy;
 
 export const config = {
   matcher: [
+    // Clerk's frontend proxy serves JavaScript files under this path. Keep it
+    // ahead of the static-extension exclusion below so those requests reach
+    // clerkMiddleware instead of returning a 404.
+    "/__clerk/(.*)",
     // Skip Next internals and static assets; run on everything else.
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     // Always run on API routes.
