@@ -29,7 +29,7 @@ export function ThemeToggle() {
       onClick={toggle}
       aria-label="Toggle dark mode"
       title="Toggle theme"
-      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted transition-colors duration-[var(--dur-micro)] ease-out hover:bg-surface-2 hover:text-foreground"
+      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted transition-[background-color,color,transform] duration-[var(--dur-micro)] ease-out hover:-translate-y-px hover:bg-surface-2 hover:text-accent active:translate-y-0"
     >
       {/* sun shows in dark mode (click → light); moon shows in light mode */}
       <SunIcon size={18} className="hidden dark:block" />

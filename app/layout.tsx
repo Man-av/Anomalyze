@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Geist, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
 import { ClerkProvider } from "@clerk/nextjs";
+import { MouseGrid } from "@/components/ui/MouseGrid";
 import "./globals.css";
 
 /* Three families — display + body + one outlier — which is the ceiling.
@@ -88,6 +89,7 @@ export default function RootLayout({
       </head>
       {/* dvh, not vh — vh doesn't account for mobile browser chrome. */}
       <body className="min-h-dvh antialiased">
+        <MouseGrid />
         {clerkEnabled ? (
           <ClerkProvider
             signInUrl="/sign-in"

@@ -44,7 +44,7 @@ function ClerkAuthMenuInner({ onOpenHistory }: { onOpenHistory: () => void }) {
   return (
     <a
       href="/sign-in"
-      className="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium text-muted transition-[background-color,border-color,color,transform] duration-[var(--dur-micro)] ease-out hover:-translate-y-px hover:bg-surface-2 hover:text-foreground active:translate-y-0 sm:px-3"
+      className="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium text-muted transition-[background-color,border-color,color,transform] duration-[var(--dur-micro)] ease-out hover:-translate-y-px hover:bg-surface-2 hover:text-accent active:translate-y-0 sm:px-3"
     >
       Sign in
     </a>
@@ -89,7 +89,7 @@ function AppHeader({ onOpenHistory }: { onOpenHistory: () => void }) {
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
         <a
           href="https://anomalyze-khaki.vercel.app/"
-          className="shrink-0 font-brand text-panel leading-head font-bold tracking-tight text-foreground no-underline"
+          className="shrink-0 font-brand text-panel leading-head font-bold tracking-tight text-foreground no-underline transition-colors duration-[var(--dur-micro)] hover:text-accent"
         >
           Anomalyze
         </a>
@@ -119,7 +119,7 @@ function AppHeader({ onOpenHistory }: { onOpenHistory: () => void }) {
             href={REPO}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden rounded-sm px-2 py-1 whitespace-nowrap text-muted transition-colors duration-[var(--dur-micro)] ease-out hover:text-foreground sm:inline"
+            className="hidden rounded-md px-2 py-2 whitespace-nowrap text-muted transition-[background-color,color,transform] duration-[var(--dur-micro)] ease-out hover:-translate-y-px hover:bg-surface-2 hover:text-accent active:translate-y-0 sm:inline"
           >
             GitHub
           </a>
@@ -165,7 +165,7 @@ export function AnalyzerApp() {
   const [historyOpen, setHistoryOpen] = useState(false);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="relative z-10 flex min-h-dvh flex-col">
       <AppHeader onOpenHistory={() => setHistoryOpen(true)} />
       <main className="flex-1">{showResults ? <Results /> : <LandingHero />}</main>
       <AppFooter />

@@ -114,15 +114,18 @@ export function Uploader() {
 
       <div className="mt-5">
         <p className="text-xs text-muted-2">No account needed — or try a sample:</p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {SAMPLES.map((s) => (
+        <div className="mt-2 grid gap-2 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          {SAMPLES.map((s, index) => (
             <button
               key={s.file}
               type="button"
               onClick={() => void loadSample(s.path, s.file)}
-              className="min-w-0 rounded-sm border border-border bg-surface px-3 py-2 text-left transition-colors duration-[var(--dur-micro)] ease-out hover:border-border-strong hover:bg-surface-2"
+              className={cn(
+                "group min-w-0 rounded-sm border border-border bg-surface px-3 py-2 text-left transition-colors duration-[var(--dur-micro)] ease-out hover:border-border-strong hover:bg-surface-2",
+                index === 2 && "sm:col-span-2",
+              )}
             >
-              <span className="block text-sm font-medium text-foreground">
+              <span className="block text-sm font-medium text-foreground transition-colors duration-[var(--dur-micro)] group-hover:text-accent">
                 {s.name}
               </span>
               <span className="block font-mono text-xs text-muted-2">{s.note}</span>

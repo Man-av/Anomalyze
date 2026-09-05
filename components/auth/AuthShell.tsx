@@ -262,7 +262,7 @@ export function AuthShell({ children }: AuthShellProps) {
   const appearance = buildAppearance(dark);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="relative z-10 flex min-h-dvh flex-col">
       {/* Only injected client-side after mount — prevents hydration mismatch */}
       {mounted && dark && (
         <style
@@ -276,7 +276,7 @@ export function AuthShell({ children }: AuthShellProps) {
         <div className="mx-auto flex max-w-6xl items-center gap-x-4 px-4 py-3 sm:px-6">
           <a
             href="https://anomalyze-khaki.vercel.app/"
-            className="shrink-0 font-brand text-panel leading-head font-bold tracking-tight text-foreground no-underline"
+            className="shrink-0 font-brand text-panel leading-head font-bold tracking-tight text-foreground no-underline transition-colors duration-[var(--dur-micro)] hover:text-accent"
           >
             Anomalyze
           </a>

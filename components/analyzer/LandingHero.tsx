@@ -146,7 +146,7 @@ export function LandingHero() {
       <div className="grid gap-16 pb-24 lg:grid-cols-2 lg:gap-12">
         {/* ── Upload ─────────────────────────────────────────────────────────── */}
         <section>
-          <h2 className="text-head leading-head font-semibold tracking-tight">
+          <h2 className="text-head leading-head font-semibold tracking-tight transition-colors duration-[var(--dur-micro)] hover:text-accent">
             Upload your data
           </h2>
           <div className="mt-6 max-w-[34rem]">
@@ -162,7 +162,7 @@ export function LandingHero() {
             capabilities and their descriptions. Rows are separated by a hairline
             and nothing else — no tiles, no chips, no equal-column grid. */}
         <section>
-          <h2 className="text-head leading-head font-semibold tracking-tight">
+          <h2 className="text-head leading-head font-semibold tracking-tight transition-colors duration-[var(--dur-micro)] hover:text-accent">
             What it does
           </h2>
           <dl className="mt-6 grid border-b border-border sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
