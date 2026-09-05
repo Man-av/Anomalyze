@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SignInButton, UserButton, useAuth } from "@clerk/nextjs";
+import { UserButton, useAuth } from "@clerk/nextjs";
 import { HistoryIcon, RefreshIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -42,11 +42,12 @@ function ClerkAuthMenuInner({ onOpenHistory }: { onOpenHistory: () => void }) {
     );
   }
   return (
-    <SignInButton>
-      <Button variant="subtle" className="px-2 sm:px-3">
-        Sign in
-      </Button>
-    </SignInButton>
+    <a
+      href="/sign-in"
+      className="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium text-muted transition-[background-color,border-color,color,transform] duration-[var(--dur-micro)] ease-out hover:-translate-y-px hover:bg-surface-2 hover:text-foreground active:translate-y-0 sm:px-3"
+    >
+      Sign in
+    </a>
   );
 }
 
