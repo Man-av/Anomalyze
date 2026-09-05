@@ -88,6 +88,11 @@ function buildAppearance(dark: boolean) {
           color: fg,
         },
         socialButtonsBlockButtonText: { color: fg, fontWeight: "500" },
+        badge: {
+          backgroundColor: "oklch(22% 0.045 49)",
+          color: "oklch(72% 0.180 49)",
+          border: "1px solid oklch(45% 0.130 49)",
+        },
         otpCodeFieldInput: {
           backgroundColor: btnBg,
           borderColor: borderMid,
@@ -175,42 +180,10 @@ function buildAppearance(dark: boolean) {
 }
 
 // ---------------------------------------------------------------------------
-// CSS injected client-side only for elements not in Clerk appearance API.
-// Uses broad attribute selectors alongside .cl-* to survive Clerk class hashing.
+// Note: Clerk dark-mode patches (badge, hint text, footer, GitHub icon) live
+// in app/globals.css under [data-theme="dark"] — pure CSS, no JS injection.
 // ---------------------------------------------------------------------------
 
-const DARK_CLERK_CSS = `
-  /* ── GitHub Octocat: black SVG → white ── */
-  .cl-socialButtonsProviderIcon__github {
-    filter: invert(1) brightness(1.2) !important;
-  }
-
-  /* ── "Last used" badge (stable .cl-badge public class) ── */
-  .cl-badge {
-    background-color: oklch(26% 0.055 49) !important;
-    color: oklch(80% 0.200 49) !important;
-    border: 1px solid oklch(50% 0.150 49) !important;
-    font-weight: 700 !important;
-    font-size: 0.58rem !important;
-    letter-spacing: 0.05em !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-
-  /* ── "Secured by Clerk" footer ──
-     Target only the stable .cl-footer container and its direct text.
-     SVG inherits currentColor so no need to pierce internal elements. */
-  .cl-footer {
-    color: oklch(62% 0.010 74) !important;
-    opacity: 1 !important;
-  }
-  .cl-footer * {
-    color: inherit !important;
-    fill: currentColor !important;
-  }
-`;
 
 // ---------------------------------------------------------------------------
 // Hooks
@@ -240,13 +213,7 @@ function useDarkMode() {
   return dark;
 }
 
-// Prevents the style tag from rendering on the server (SSR) to avoid
-// hydration mismatch. It only becomes true after the component mounts.
-function useMounted() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted;
-}
+
 
 // ---------------------------------------------------------------------------
 // AuthShell
@@ -257,19 +224,11 @@ interface AuthShellProps {
 }
 
 export function AuthShell({ children }: AuthShellProps) {
-  const dark    = useDarkMode();
-  const mounted = useMounted();
+  const dark       = useDarkMode();
   const appearance = buildAppearance(dark);
 
   return (
     <div className="relative z-10 flex min-h-dvh flex-col">
-      {/* Only injected client-side after mount — prevents hydration mismatch */}
-      {mounted && dark && (
-        <style
-          id="clerk-dark-patch"
-          dangerouslySetInnerHTML={{ __html: DARK_CLERK_CSS }}
-        />
-      )}
 
       {/* ── Header ── */}
       <header className="sticky top-0 z-[var(--z-sticky)] border-b border-border bg-background">
