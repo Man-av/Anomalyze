@@ -12,7 +12,8 @@
  * the same file (or remounting) never re-spends the free-tier quota.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { DocIcon, RefreshIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -23,7 +24,16 @@ import { summarizeProfile } from "@/lib/analysis/summarize";
 import { hashObject } from "@/lib/hash";
 import { buildFallbackReport } from "@/lib/narrative/fallback";
 import type { DatasetProfile, Report } from "@/lib/types";
+import { useAnalyzer } from "./AnalyzerContext";
 import { useChatBridge } from "./chat/ChatBridge";
+
+// Hashes saved to history this session — dedupes re-saving the same analysis
+// across remounts/retries. Module scope so it survives component unmounts.
+const savedHashes = new Set<string>();
+
+// Clerk is optional; the NEXT_PUBLIC key is inlined at build. Gates whether the
+// history-save component is mounted (it calls useAuth(), which needs a provider).
+const clerkEnabled = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 interface InsightsResponse {
   report: Report | null;
@@ -48,6 +58,57 @@ function writeSession(key: string, report: Report): void {
   }
 }
 
+/**
+ * Persists a settled analysis to history (aggregates only) once, when signed
+ * in. Split out from ReportPanel so useAuth() — which requires ClerkProvider —
+ * is only ever called when Clerk is configured: the parent mounts this only
+ * then. Renders nothing; dedupe is module-scoped (savedHashes) so it survives
+ * remounts, and the ref guards against a double-POST within one mount.
+ */
+function HistorySaver({
+  fileName,
+  fileSize,
+  hash,
+  profile,
+  report,
+}: {
+  fileName: string;
+  fileSize: number | null;
+  hash: string;
+  profile: DatasetProfile;
+  report: Report;
+}) {
+  const { isSignedIn } = useAuth();
+  const saveGuard = useRef(false);
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+    if (savedHashes.has(hash) || saveGuard.current) return;
+    saveGuard.current = true;
+    savedHashes.add(hash);
+
+    void fetch("/api/history", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        fileName,
+        fileSize,
+        rowCount: profile.rowCount,
+        columnCount: profile.columnCount,
+        qualityScore: profile.quality.score,
+        anomalyCount: profile.anomalies.length,
+        profile,
+        report,
+      }),
+    }).catch(() => {
+      // Non-fatal: history is additive. Let a retry re-attempt next settle.
+      savedHashes.delete(hash);
+    });
+  }, [isSignedIn, fileName, fileSize, hash, profile, report]);
+
+  return null;
+}
+
 function Section({ label, children }: { label: string; children: string }) {
   if (!children) return null;
   return (
@@ -63,12 +124,24 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
   const hash = useMemo(() => hashObject(summary), [summary]);
   const fallback = useMemo(() => buildFallbackReport(profile), [profile]);
   const bridge = useChatBridge();
+  const { data } = useAnalyzer();
 
-  const [report, setReport] = useState<Report | null>(null);
-  const [loading, setLoading] = useState(true);
+  const restored = data?.restored ?? false;
+  const storedReport = data?.report;
+
+  const [report, setReport] = useState<Report | null>(restored ? storedReport ?? null : null);
+  const [loading, setLoading] = useState(!restored);
   const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
+    // Restored from history: the report was stored with it — use it directly,
+    // never re-spend LLM quota reopening an old analysis.
+    if (restored) {
+      setReport(storedReport ?? fallback);
+      setLoading(false);
+      return;
+    }
+
     const cacheKey = `insights:${hash}`;
 
     // Fresh runs (nonce 0) may reuse a cached AI report; a manual retry skips it.
@@ -113,7 +186,11 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
       cancelled = true;
       controller.abort();
     };
-  }, [hash, summary, fallback, nonce]);
+  }, [hash, summary, fallback, nonce, restored, storedReport]);
+
+  // File identity, passed to <HistorySaver> below (undefined until a file is set).
+  const fileName = data?.fileName;
+  const fileSize = data?.fileSize ?? null;
 
   const retry = useCallback(() => setNonce((n) => n + 1), []);
 
@@ -130,6 +207,15 @@ export function ReportPanel({ profile }: { profile: DatasetProfile }) {
 
   return (
     <Card>
+      {clerkEnabled && !restored && !loading && report && fileName ? (
+        <HistorySaver
+          fileName={fileName}
+          fileSize={fileSize}
+          hash={hash}
+          profile={profile}
+          report={report}
+        />
+      ) : null}
       <CardHeader
         icon={<DocIcon size={16} />}
         title="Narrative report"

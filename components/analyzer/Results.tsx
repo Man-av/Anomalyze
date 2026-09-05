@@ -111,7 +111,7 @@ export function Results() {
   const { data } = useAnalyzer();
   const active = useActiveSection();
   if (!data) return null;
-  const { profile, truncated, rows } = data;
+  const { profile, truncated, rows, restored = false } = data;
 
   return (
     <ChatBridgeProvider>
@@ -137,11 +137,11 @@ export function Results() {
             </div>
 
             <div id="charts" className="scroll-mt-24">
-              <Dashboard profile={profile} rows={rows} />
+              <Dashboard profile={profile} rows={rows} restored={restored} />
             </div>
 
             <div id="chat" className="scroll-mt-24">
-              <Chat profile={profile} rows={rows} />
+              <Chat profile={profile} rows={rows} restored={restored} />
             </div>
 
             <div id="quality" className="scroll-mt-24">

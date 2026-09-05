@@ -38,7 +38,15 @@ function renderChart(spec: ChartSpec) {
   }
 }
 
-export function Dashboard({ profile, rows }: { profile: DatasetProfile; rows: Row[] }) {
+export function Dashboard({
+  profile,
+  rows,
+  restored = false,
+}: {
+  profile: DatasetProfile;
+  rows: Row[];
+  restored?: boolean;
+}) {
   const specs = useMemo(() => selectCharts(profile, rows), [profile, rows]);
 
   return (
@@ -54,6 +62,14 @@ export function Dashboard({ profile, rows }: { profile: DatasetProfile; rows: Ro
           </span>
         ) : null}
       </div>
+
+      {restored ? (
+        <p className="mb-4 rounded-panel border border-border bg-surface-2 px-4 py-3 text-sm text-muted">
+          Reopened from history. Time-series and scatter plots need the original
+          file — reopen it to see those. Everything computed from the profile is
+          shown below.
+        </p>
+      ) : null}
 
       {specs.length === 0 ? (
         <Card>

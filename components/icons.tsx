@@ -23,25 +23,6 @@ function svgProps(size: number, className?: string) {
   };
 }
 
-export function LogoMark() {
-  return (
-    // The glyph is the product's subject, so it carries the accent directly.
-    // It used to sit reversed inside an accent-filled rounded square, which is
-    // the generic app-icon mark and spent the accent budget on chrome.
-    <span className="flex shrink-0 items-center text-accent">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path
-          d="M3 17l5-6 4 4 5-8 4 6"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-  );
-}
-
 export function UploadIcon({ size = 34, className }: IconProps) {
   return (
     <svg {...svgProps(size, className)}>
@@ -164,6 +145,14 @@ export function MoonIcon({ size = 18, className }: IconProps) {
   return (
     <svg {...svgProps(size, className)}>
       <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
+    </svg>
+  );
+}
+
+export function HistoryIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg {...svgProps(size, className)}>
+      <path d="M3 12a9 9 0 109-9 9 9 0 00-7.5 4M3 4v3h3 M12 8v4l3 2" />
     </svg>
   );
 }

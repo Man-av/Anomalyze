@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono, Space_Grotesk } from "next/font/google";
-import Script from "next/script";
+
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 /* Three families — display + body + one outlier — which is the ceiling.
@@ -58,6 +59,10 @@ export const viewport: Viewport = {
 // flash of the default. `data-theme="dark"` on <html> is the no-JS fallback.
 const THEME_INIT = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})()`;
 
+// Clerk is optional — mounted only when a publishable key is present, so the
+// app still boots (and builds) with no auth configured.
+const clerkEnabled = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
 export default function RootLayout({
   children,
 }: {
@@ -71,12 +76,24 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${geist.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {THEME_INIT}
-        </Script>
+        {/* Runs before first paint — sets data-theme from localStorage so no flash. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
       </head>
       {/* dvh, not vh — vh doesn't account for mobile browser chrome. */}
-      <body className="min-h-dvh antialiased">{children}</body>
+      <body className="min-h-dvh antialiased">
+        {clerkEnabled ? (
+          <ClerkProvider
+            signInUrl="/sign-in"
+            signUpUrl="/sign-up"
+            signInFallbackRedirectUrl="/"
+            signUpFallbackRedirectUrl="/"
+          >
+            {children}
+          </ClerkProvider>
+        ) : (
+          children
+        )}
+      </body>
     </html>
   );
 }

@@ -22,7 +22,7 @@ import {
 import { LIMITS } from "@/lib/config";
 import { profileDataset } from "@/lib/analysis/profile";
 import { parseCsv, parseFile } from "@/lib/parse/parseFile";
-import type { DatasetProfile, Row } from "@/lib/types";
+import type { DatasetProfile, Report, Row } from "@/lib/types";
 
 export type Phase = "idle" | "parsing" | "profiling" | "ready" | "error";
 
@@ -32,6 +32,10 @@ export interface ReadyData {
   rows: Row[];
   profile: DatasetProfile;
   truncated: boolean;
+  /** Present when restored from history: the stored narrative report. */
+  report?: Report;
+  /** True when this analysis was reopened from history (rows are empty). */
+  restored?: boolean;
 }
 
 export interface AnalyzerState {
@@ -75,6 +79,12 @@ function reducer(state: AnalyzerState, action: Action): AnalyzerState {
 interface AnalyzerContextValue extends AnalyzerState {
   analyzeFile: (file: File) => Promise<void>;
   loadSample: (path: string, fileName: string) => Promise<void>;
+  loadFromHistory: (record: {
+    fileName: string;
+    fileSize: number | null;
+    profile: DatasetProfile;
+    report: Report;
+  }) => void;
   reset: () => void;
 }
 
@@ -186,11 +196,37 @@ export function AnalyzerProvider({ children }: { children: ReactNode }) {
     [runProfile],
   );
 
+  const loadFromHistory = useCallback(
+    (record: {
+      fileName: string;
+      fileSize: number | null;
+      profile: DatasetProfile;
+      report: Report;
+    }) => {
+      // Restore mode: no raw rows were stored, so charts/chat/grounding that
+      // need rows degrade gracefully (see selectCharts / buildGrounding, which
+      // treat rows: [] as "profile-only"). The stored report is reused directly.
+      dispatch({
+        type: "READY",
+        data: {
+          fileName: record.fileName,
+          fileSize: record.fileSize,
+          rows: [],
+          profile: record.profile,
+          truncated: false,
+          report: record.report,
+          restored: true,
+        },
+      });
+    },
+    [],
+  );
+
   const reset = useCallback(() => dispatch({ type: "RESET" }), []);
 
   const value = useMemo<AnalyzerContextValue>(
-    () => ({ ...state, analyzeFile, loadSample, reset }),
-    [state, analyzeFile, loadSample, reset],
+    () => ({ ...state, analyzeFile, loadSample, loadFromHistory, reset }),
+    [state, analyzeFile, loadSample, loadFromHistory, reset],
   );
 
   return <AnalyzerContext.Provider value={value}>{children}</AnalyzerContext.Provider>;

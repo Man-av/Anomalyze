@@ -39,7 +39,15 @@ const NETWORK_ERROR =
 let idCounter = 0;
 const nextId = () => `m${(idCounter += 1)}`;
 
-export function Chat({ profile, rows }: { profile: DatasetProfile; rows: Row[] }) {
+export function Chat({
+  profile,
+  rows,
+  restored = false,
+}: {
+  profile: DatasetProfile;
+  rows: Row[];
+  restored?: boolean;
+}) {
   const grounding = useMemo(() => buildGrounding(profile, rows), [profile, rows]);
 
   const [messages, setMessages] = useState<UiMessage[]>([]);
@@ -136,6 +144,13 @@ export function Chat({ profile, rows }: { profile: DatasetProfile; rows: Row[] }
           subtitle="Grounded in the statistics computed locally — ask about trends, anomalies, or specific records"
         />
         <CardBody className="space-y-4">
+          {restored ? (
+            <p className="rounded-md border border-border bg-surface-2 px-3 py-2 text-xs text-muted">
+              This analysis was reopened from history. Chat is grounded on the
+              stored statistics only — reopen the original file for row-level
+              answers about specific records.
+            </p>
+          ) : null}
           <MessageList messages={messages} busy={busy} starters={STARTERS} onAsk={send} />
           <ChatInput busy={busy} onSend={send} onStop={stop} />
         </CardBody>

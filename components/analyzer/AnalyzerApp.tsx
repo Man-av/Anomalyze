@@ -1,14 +1,57 @@
 "use client";
 
-import { RefreshIcon } from "@/components/icons";
+import { useState } from "react";
+import { SignInButton, UserButton, useAuth } from "@clerk/nextjs";
+import { HistoryIcon, RefreshIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { fmtBytes, fmtInt } from "@/lib/format";
 import { useAnalyzer } from "./AnalyzerContext";
+import { HistoryPanel } from "./HistoryPanel";
 import { LandingHero } from "./LandingHero";
 import { Results } from "./Results";
 
 const REPO = "https://github.com/Man-av/Anomalyze";
+
+// Clerk is optional; the NEXT_PUBLIC key is inlined at build, so this gates the
+// auth UI client-side. With no key, no ClerkProvider is mounted (see layout),
+// so the Clerk components must not render at all.
+const clerkEnabled = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+/**
+ * Auth control in the header. Login is optional, so logged-out shows a quiet
+ * "Sign in" (Clerk's self-hosted card at /sign-in); logged-in shows a History
+ * button (opens the drawer) and Clerk's <UserButton> account menu, which owns
+ * "manage account" and sign-out. <SignedIn>/<SignedOut> resolve Clerk's own
+ * loading state — no skeleton needed.
+ */
+function AuthMenu({ onOpenHistory }: { onOpenHistory: () => void }) {
+  const { isSignedIn } = useAuth();
+  if (!clerkEnabled) return null;
+  if (isSignedIn) {
+    return (
+      <>
+        <Button
+          variant="subtle"
+          onClick={onOpenHistory}
+          className="px-2 sm:px-3"
+          title="Your analysis history"
+        >
+          <HistoryIcon size={15} />
+          <span className="hidden sm:inline">History</span>
+        </Button>
+        <UserButton />
+      </>
+    );
+  }
+  return (
+    <SignInButton>
+      <Button variant="subtle" className="px-2 sm:px-3">
+        Sign in
+      </Button>
+    </SignInButton>
+  );
+}
 
 /**
  * Edge-aligned header: identity and context left, controls right, hairline
@@ -23,7 +66,7 @@ const REPO = "https://github.com/Man-av/Anomalyze";
  * so both stay reachable at any scroll depth. Below 40rem that slot drops to its
  * own full-width row under a hairline rather than competing for the first row.
  */
-function AppHeader() {
+function AppHeader({ onOpenHistory }: { onOpenHistory: () => void }) {
   const { data, reset } = useAnalyzer();
 
   const meta = data
@@ -66,10 +109,11 @@ function AppHeader() {
             href={REPO}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-sm px-2 py-1 whitespace-nowrap text-muted transition-colors duration-[var(--dur-micro)] ease-out hover:text-foreground"
+            className="hidden rounded-sm px-2 py-1 whitespace-nowrap text-muted transition-colors duration-[var(--dur-micro)] ease-out hover:text-foreground sm:inline"
           >
             GitHub
           </a>
+          <AuthMenu onOpenHistory={onOpenHistory} />
           <ThemeToggle />
         </nav>
       </div>
@@ -108,12 +152,14 @@ function AppFooter() {
 export function AnalyzerApp() {
   const { phase } = useAnalyzer();
   const showResults = phase === "ready";
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <AppHeader />
+      <AppHeader onOpenHistory={() => setHistoryOpen(true)} />
       <main className="flex-1">{showResults ? <Results /> : <LandingHero />}</main>
       <AppFooter />
+      <HistoryPanel open={historyOpen} onClose={() => setHistoryOpen(false)} />
     </div>
   );
 }
