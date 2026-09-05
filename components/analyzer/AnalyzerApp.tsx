@@ -87,9 +87,12 @@ function AppHeader({ onOpenHistory }: { onOpenHistory: () => void }) {
   return (
     <header className="sticky top-0 z-[var(--z-sticky)] border-b border-border bg-background">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
-        <span className="shrink-0 font-heading text-lede leading-head font-bold tracking-tight text-foreground">
+        <a
+          href="https://anomalyze-khaki.vercel.app/"
+          className="shrink-0 font-brand text-panel leading-head font-bold tracking-tight text-foreground no-underline"
+        >
           Anomalyze
-        </span>
+        </a>
 
         {data ? (
           <div className="order-last w-full min-w-0 border-t border-border pt-2 sm:order-none sm:w-auto sm:border-t-0 sm:border-l sm:border-border sm:pt-0 sm:pl-4">

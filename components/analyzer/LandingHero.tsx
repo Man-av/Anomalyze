@@ -121,7 +121,7 @@ export function LandingHero() {
           <h1 className="text-hero leading-hero tracking-hero font-semibold">
             Every dataset has a point that doesn&rsquo;t belong.
             <br />
-            <span className="text-accent">Anomalyze</span> finds it.
+            <span className="text-accent"><span className="font-brand text-hero-lg">Anomalyze</span> finds it.</span>
           </h1>
 
           <p className="mt-6 max-w-[65ch] text-base text-pretty text-muted">

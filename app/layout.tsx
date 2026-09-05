@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import { Geist, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
 import { ClerkProvider } from "@clerk/nextjs";
@@ -32,6 +33,12 @@ const geist = Geist({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
+  display: "swap",
+});
+
+const goingToDoGreatThings = localFont({
+  src: "../public/fonts/GoingToDoGreatThings.ttf",
+  variable: "--font-going",
   display: "swap",
 });
 
@@ -73,7 +80,7 @@ export default function RootLayout({
       lang="en"
       data-theme="dark"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${geist.variable} ${jetbrainsMono.variable}`}
+      className={`${spaceGrotesk.variable} ${geist.variable} ${jetbrainsMono.variable} ${goingToDoGreatThings.variable}`}
     >
       <head>
         {/* Runs before first paint — sets data-theme from localStorage so no flash. */}

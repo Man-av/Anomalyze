@@ -275,8 +275,8 @@ export function AuthShell({ children }: AuthShellProps) {
       <header className="sticky top-0 z-[var(--z-sticky)] border-b border-border bg-background">
         <div className="mx-auto flex max-w-6xl items-center gap-x-4 px-4 py-3 sm:px-6">
           <a
-            href="/"
-            className="shrink-0 font-heading text-lede leading-head font-bold tracking-tight text-foreground no-underline"
+            href="https://anomalyze-khaki.vercel.app/"
+            className="shrink-0 font-brand text-panel leading-head font-bold tracking-tight text-foreground no-underline"
           >
             Anomalyze
           </a>
