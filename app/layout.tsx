@@ -48,6 +48,10 @@ export const metadata: Metadata = {
   description:
     "Upload any CSV or Excel file and get an instant statistical report, robust anomaly detection, an auto-built chart dashboard, and a data-aware chat — computed privately in your browser.",
   metadataBase: new URL("https://anomalyze.vercel.app"),
+  icons: {
+    icon: "/favicon-512.png",
+    apple: "/favicon-512.png",
+  },
   openGraph: {
     title: "Anomalyze — Upload data, get instant insights",
     description:
