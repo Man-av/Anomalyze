@@ -19,15 +19,12 @@ const REPO = "https://github.com/Man-av/Anomalyze";
 const clerkEnabled = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 /**
- * Auth control in the header. Login is optional, so logged-out shows a quiet
- * "Sign in" (Clerk's self-hosted card at /sign-in); logged-in shows a History
- * button (opens the drawer) and Clerk's <UserButton> account menu, which owns
- * "manage account" and sign-out. <SignedIn>/<SignedOut> resolve Clerk's own
- * loading state — no skeleton needed.
+ * Inner auth menu — only rendered when ClerkProvider is mounted.
+ * useAuth() is safe here because this component is only ever instantiated
+ * inside the ClerkProvider tree (guarded by AuthMenu below).
  */
-function AuthMenu({ onOpenHistory }: { onOpenHistory: () => void }) {
+function ClerkAuthMenuInner({ onOpenHistory }: { onOpenHistory: () => void }) {
   const { isSignedIn } = useAuth();
-  if (!clerkEnabled) return null;
   if (isSignedIn) {
     return (
       <>
@@ -51,6 +48,15 @@ function AuthMenu({ onOpenHistory }: { onOpenHistory: () => void }) {
       </Button>
     </SignInButton>
   );
+}
+
+/**
+ * Auth guard — renders nothing when Clerk isn't configured, so
+ * ClerkAuthMenuInner (and its useAuth hook) never mounts without a provider.
+ */
+function AuthMenu({ onOpenHistory }: { onOpenHistory: () => void }) {
+  if (!clerkEnabled) return null;
+  return <ClerkAuthMenuInner onOpenHistory={onOpenHistory} />;
 }
 
 /**
