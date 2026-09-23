@@ -153,6 +153,8 @@ function AppFooter() {
           >
             @man-av
           </a>
+          <span className="mx-2">·</span>
+          <a href="/privacy" className="text-accent-ink underline underline-offset-2">Privacy</a>
         </p>
       </div>
     </footer>

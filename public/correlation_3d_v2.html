@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Correlation — 3D</title>
+<style>
+  :root{
+    --accent: #ff6a35;
+    --accent-soft: #ffcf70;
+    --text-dim: rgba(170, 170, 165, 0.55);
+    --text-bright: rgba(235, 230, 220, 0.9);
+  }
+  html, body{
+    margin:0; padding:0; height:100%;
+    background: #000000;
+    display:flex; align-items:center; justify-content:center;
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  .frame{
+    position:relative;
+    width:100%;
+    height:100%;
+    box-sizing:border-box;
+    border: 1px solid rgba(255, 106, 53, 0.22);
+    background: #000000;
+    overflow:hidden;
+  }
+  canvas{ display:block; width:100%; height:100%; }
+  .vignette{
+    position:absolute; inset:0;
+    pointer-events:none;
+    background: radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(0,0,0,0.65) 100%);
+  }
+  .corner{
+    position:absolute; left:14px; top:12px;
+    font-size:11px; letter-spacing:0.04em;
+    color: var(--text-dim);
+    pointer-events:none;
+  }
+  .label{
+    position:absolute;
+    right:14px; bottom:12px;
+    text-align:right;
+    line-height:1.5;
+    font-size:11px;
+    letter-spacing:0.04em;
+    color: var(--text-dim);
+    pointer-events:none;
+  }
+  .label .val{ color: var(--accent-soft); font-size:13px; font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="frame" id="frame">
+  <canvas id="c"></canvas>
+  <div class="vignette"></div>
+  <div class="corner">// correlation_analysis</div>
+  <div class="label">
+    <div><span class="val">r = 0.82</span> &nbsp; n = 90</div>
+    <div>3 outliers flagged (Tukey IQR)</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const frame = document.getElementById('frame');
+const canvas = document.getElementById('c');
+
+const ACCENT = 0xff6a35;
+const ACCENT_SOFT = 0xffcf70;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.075);
+
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+const camBase = new THREE.Vector3(2.2, 1.45, 4.5);
+camera.position.copy(camBase);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+const world = new THREE.Group();
+scene.add(world);
+
+// ---- textures ----
+function makeGlowTexture(){
+  const size = 64;
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.5, 'rgba(255,255,255,0.5)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(c);
+}
+function makeRingTexture(){
+  const size = 128;
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  g.lineWidth = 5;
+  g.strokeStyle = 'white';
+  g.shadowColor = 'white';
+  g.shadowBlur = 12;
+  g.beginPath();
+  g.arc(size/2, size/2, size/2 - 12, 0, Math.PI * 2);
+  g.stroke();
+  return new THREE.CanvasTexture(c);
+}
+function makeGridTexture(){
+  const size = 512;
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  g.strokeStyle = 'rgba(255,106,53,0.3)';
+  g.lineWidth = 1;
+  const step = size / 12;
+  for(let i = 0; i <= 12; i++){
+    g.beginPath(); g.moveTo(i * step, 0); g.lineTo(i * step, size); g.stroke();
+    g.beginPath(); g.moveTo(0, i * step); g.lineTo(size, i * step); g.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(4, 4);
+  return tex;
+}
+const glowTex = makeGlowTexture();
+const ringTex = makeRingTexture();
+const gridTex = makeGridTexture();
+
+// ---- floor grid for depth ----
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(16, 16),
+  new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, opacity: 0.35, side: THREE.DoubleSide })
+);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = -1.7;
+scene.add(floor);
+
+// ---- thin axes ----
+function addAxis(from, to, opacity){
+  const geo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(...from), new THREE.Vector3(...to)
+  ]);
+  const mat = new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity });
+  world.add(new THREE.Line(geo, mat));
+}
+addAxis([-2.2, -1.4, 0], [2.2, -1.4, 0], 0.3);
+addAxis([-2.2, -1.4, 0], [-2.2, 1.5, 0], 0.3);
+addAxis([-2.2, -1.4, -1.7], [-2.2, -1.4, 1.7], 0.3);
+
+// ---- correlated scatter data, brighter & bigger ----
+const POINT_COUNT = 90;
+const SLOPE = 0.55;
+const positions = new Float32Array(POINT_COUNT * 3);
+const dataXY = [];
+
+for(let i = 0; i < POINT_COUNT; i++){
+  const x = (Math.random() * 2 - 1) * 2;
+  const noise = (Math.random() - 0.5) * 0.7;
+  const y = SLOPE * x + noise;
+  const z = (Math.random() - 0.5) * 1.8;
+  positions[i * 3] = x;
+  positions[i * 3 + 1] = y;
+  positions[i * 3 + 2] = z;
+  dataXY.push({ x, y, z });
+}
+
+const pointsGeo = new THREE.BufferGeometry();
+pointsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+// bright core layer
+const coreMat = new THREE.PointsMaterial({
+  size: 0.075, map: glowTex, color: ACCENT_SOFT, transparent: true,
+  opacity: 0.95, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending
+});
+world.add(new THREE.Points(pointsGeo, coreMat));
+
+// soft halo layer behind, same positions, bigger + dimmer -> fake glow
+const haloMat = new THREE.PointsMaterial({
+  size: 0.22, map: glowTex, color: ACCENT, transparent: true,
+  opacity: 0.25, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending
+});
+world.add(new THREE.Points(pointsGeo, haloMat));
+
+// ---- trend line, rendered as a real tube so it has visible thickness ----
+const trendCurve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-2.2, -2.2 * SLOPE, 0),
+  new THREE.Vector3(2.2, 2.2 * SLOPE, 0)
+]);
+const trendTube = new THREE.Mesh(
+  new THREE.TubeGeometry(trendCurve, 8, 0.014, 8, false),
+  new THREE.MeshBasicMaterial({ color: ACCENT_SOFT, transparent: true, opacity: 0.9 })
+);
+world.add(trendTube);
+
+// ---- flagged outliers: pulled from the dataset, pulsing halo ----
+const outlierIdx = [3, 27, 61].filter(i => i < POINT_COUNT);
+const outlierPulses = [];
+outlierIdx.forEach(i => {
+  // push this point out from the trend line so it visibly reads as an outlier
+  positions[i * 3 + 1] += (Math.random() > 0.5 ? 1 : -1) * (0.9 + Math.random() * 0.4);
+  pointsGeo.attributes.position.needsUpdate = true;
+
+  const p = new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+
+  const dot = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: glowTex, color: 0xff5c5c, transparent: true,
+    blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.95
+  }));
+  dot.scale.set(0.16, 0.16, 1);
+  dot.position.copy(p);
+  world.add(dot);
+
+  const ring = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: ringTex, color: 0xff5c5c, transparent: true,
+    blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.6
+  }));
+  ring.position.copy(p);
+  world.add(ring);
+
+  outlierPulses.push({ ring, phase: Math.random() * Math.PI * 2 });
+});
+
+// ---------------------------------------------------------------
+// resize + animate — noticeably alive, still no interaction required
+// ---------------------------------------------------------------
+function resize(){
+  const w = frame.clientWidth;
+  const h = frame.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h, false);
+}
+window.addEventListener('resize', resize);
+resize();
+
+const clock = new THREE.Clock();
+function animate(){
+  const t = clock.getElapsedTime();
+
+  world.rotation.y = t * 0.16;
+  world.rotation.x = Math.sin(t * 0.2) * 0.09;
+
+  camera.position.x = camBase.x + Math.sin(t * 0.08) * 0.15;
+  camera.position.y = camBase.y + Math.sin(t * 0.11) * 0.08;
+  camera.lookAt(0, 0, 0);
+
+  outlierPulses.forEach(o => {
+    const p = (Math.sin(t * 1.6 + o.phase) + 1) / 2; // 0..1
+    const scale = 0.22 + p * 0.3;
+    o.ring.scale.set(scale, scale, 1);
+    o.ring.material.opacity = 0.65 * (1 - p * 0.6);
+  });
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+
+</body>
+</html>

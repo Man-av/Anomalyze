@@ -28,42 +28,6 @@ const FEATURES: { term: string; body: string }[] = [
   },
 ];
 
-/**
- * The signature visual: a real anomaly call-out, drawn with the app's own
- * chart tokens. This is the one thing Anomalyze does that a plain chart
- * library doesn't — so it's the first thing on the page, not the fourth.
- */
-function AnomalySparkline() {
-  return (
-    <svg
-      viewBox="0 0 460 200"
-      className="h-full w-full"
-      role="img"
-      aria-label="Line chart of a metric over time, with one point flagged as a statistical anomaly at 3.8 standard deviations from the trend"
-    >
-      {[50, 90, 130, 170].map((y) => (
-        <line key={y} x1="0" y1={y} x2="460" y2={y} stroke="var(--chart-grid)" strokeWidth="1" />
-      ))}
-      <path
-        d="M 6 132 C 40 126, 60 129, 92 120 C 124 111, 142 118, 172 106 C 198 96, 212 44, 232 38 C 252 32, 262 92, 292 97 C 322 102, 342 84, 372 78 C 402 72, 424 66, 454 60"
-        fill="none"
-        stroke="var(--chart-1)"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <line x1="232" y1="38" x2="232" y2="176" stroke="var(--chart-anomaly)" strokeWidth="1" strokeDasharray="3 4" opacity="0.6" />
-      <circle cx="232" cy="38" r="10" fill="var(--chart-anomaly)" opacity="0.16" />
-      <circle cx="232" cy="38" r="5" fill="var(--chart-anomaly)" stroke="var(--surface)" strokeWidth="2" />
-      <g transform="translate(240, 12)">
-        <rect width="112" height="24" rx="6" fill="var(--danger-soft)" />
-        <text x="8" y="16" className="font-mono" fontSize="11" fontWeight="600" fill="var(--danger)">
-          3.8σ · flagged
-        </text>
-      </g>
-    </svg>
-  );
-}
-
 function ProcessingCard({ fileName, phase }: { fileName: string | null; phase: string }) {
   const label = phase === "parsing" ? "Parsing file…" : "Profiling columns…";
   return (
@@ -132,14 +96,12 @@ export function LandingHero() {
           </p>
         </div>
 
-        {/* Hairline frame, no shadow: the border already draws the edge, and a
-            second edge under it is depth for its own sake. */}
-        <div className="rounded-panel border border-border bg-surface p-4">
-          <div className="mb-2 flex items-center justify-between gap-3 px-1 font-mono text-xs text-muted-2">
-            <span className="truncate">revenue.csv &middot; row 232</span>
-            <span className="shrink-0">MAD robust-z</span>
-          </div>
-          <AnomalySparkline />
+        <div className="p-4">
+          <iframe
+            src="/correlation_3d_v2.html"
+            title="3D correlation analysis"
+            className="aspect-[16/10] w-full border-0"
+          />
         </div>
       </section>
 

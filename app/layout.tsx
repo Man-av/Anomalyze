@@ -49,14 +49,17 @@ export const metadata: Metadata = {
     "Upload any CSV or Excel file and get an instant statistical report, robust anomaly detection, an auto-built chart dashboard, and a data-aware chat — computed privately in your browser.",
   metadataBase: new URL("https://anomalyze.vercel.app"),
   icons: {
-    icon: [{ url: "/gemini-svg.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
   openGraph: {
     title: "Anomalyze — Upload data, get instant insights",
     description:
       "Instant EDA: stats, robust anomaly detection, charts, and a data-aware chat. Your data is analyzed in the browser.",
     type: "website",
+    url: "https://anomalyze-khaki.vercel.app",
+    images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "Anomalyze data analysis" }],
   },
+  twitter: { card: "summary_large_image", images: ["/og-image.svg"] },
 };
 
 // viewport-fit=cover so env(safe-area-inset-*) resolves on notched devices.
